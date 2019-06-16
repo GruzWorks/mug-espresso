@@ -22,5 +22,7 @@ Wykonanie aplikacji na urządzenia mobilne z systemem Android, pozwalającej na 
 * Buforowanie danych w celu zmniejszenia liczby zapytań do serwera oraz przyspieszenia działania aplikacji
 
 ## Literatura
-* Google and Open Handset Alliance, n.d. _Android API Reference_ (https://developer.android.com/reference)
-* Kotlin Foundation, n.d. _Kotlin Language Documentation_ (https://kotlinlang.org/docs/reference)
+1. Kotlin Foundation, "Kotlin Language Documentation", 2019, https://kotlinlang.org/docs/reference/.
+1. Google and Open Handset Alliance, "Android API Reference", 2019, https://developer.android.com/reference.
+1. A. Leiva, _Kotlin for Android Developers: Learn Kotlin the easy way while developing an Android App_. CreateSpace Independent Publishing Platform, 2016.
+1. D. Griffiths, D. Griffiths, _Head First Android Development, 2nd Edition_. O'Reilly Media, 2017.
