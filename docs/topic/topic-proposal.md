@@ -9,17 +9,7 @@
 * Mobile application for the Android platform facilitating use of and contribution to a crowdsourced geospatial database
 
 ## Cel i zakres pracy
-Wykonanie aplikacji na urządzenia mobilne z systemem Android, pozwalającej na przeglądanie, dodawanie, usuwanie i edycję danych geoprzestrzennych na temat lokalizacji ogólnodostępnych gniazdek elektrycznych w miejscach publicznych, korzystającej z interfejsu programistycznego niezależnie rozwijanego serwera przetwarzającego i agregującego informacje
-
-## Zadania do wykonania
-* Wyświetlanie punktów na mapie
-* Wyświetlanie punktów w postaci listy sortowanej odległością od lokalizacji użytkownika
-* Wyszukiwanie punktów według nazwy oraz w pobliżu zadanej lokalizacji
-* Dodawanie, edycja, usuwanie punktów
-* Tworzenie i edycja schematycznych rysunków, pokazujących rozmieszczenie gniazdek w budynkach
-* Komunikacja z serwerem poprzez publiczne API
-* Obsługa kont użytkowników
-* Buforowanie danych w celu zmniejszenia liczby zapytań do serwera oraz przyspieszenia działania aplikacji
+Wykonanie aplikacji na urządzenia mobilne z systemem Android, pozwalającej na przeglądanie, dodawanie, usuwanie i edycję danych geoprzestrzennych na temat lokalizacji ogólnodostępnych gniazdek elektrycznych w miejscach publicznych, korzystającej z interfejsu programistycznego niezależnie rozwijanego serwera przetwarzającego i agregującego informacje. Przeglądanie punktów powinno by dostępne za pomocą widoku mapy lub listy sortowanej odległością od lokalizacji użytkownika. Aplikacja powinna wspiera konta użytkownika, umożliwiając edycję/usunięcie tylko punktów dodanych przez daną osobę. Opcjonalnie powinna być możliwość tworzenia i edycji schematycznych rysunków, pokazujących rozmieszczenie gniazdek w budynkach oraz wsparcie dla buforowania danych w celu zmniejszenia liczby zapytań do serwera oraz przyspieszenia działania aplikacji.
 
 ## Literatura
 1. Kotlin Foundation, "Kotlin Language Documentation", 2019, https://kotlinlang.org/docs/reference/.
