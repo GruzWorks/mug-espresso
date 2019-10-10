@@ -1,4 +1,4 @@
-package pl.mug.espresso
+package test.mug.espresso
 
 import org.junit.Test
 

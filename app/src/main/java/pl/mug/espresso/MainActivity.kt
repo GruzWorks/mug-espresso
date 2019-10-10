@@ -1,4 +1,4 @@
-package pl.mug.espresso
+package test.mug.espresso
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
