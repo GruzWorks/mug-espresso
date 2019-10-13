@@ -1,0 +1,24 @@
+<resources>
+	<!--
+    Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=BB:1F:C4:B3:D7:AC:00:3F:38:8A:68:2C:72:FA:95:43:FA:67:1B:67%3Btest.mug.espresso
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    test.mug.espresso
+
+    SHA-1 certificate fingerprint:
+    BB:1F:C4:B3:D7:AC:00:3F:38:8A:68:2C:72:FA:95:43:FA:67:1B:67
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+	<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCFgM2jmeMwiHiZIaWXpob3obDrGG0qbpc</string>
+</resources>
