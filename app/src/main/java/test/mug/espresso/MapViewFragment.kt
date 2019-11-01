@@ -19,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.databinding.FragmentMapViewBinding
+import timber.log.Timber
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private val LOCATION_REQUEST_CODE: Int = 420
@@ -38,18 +39,20 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
 
-		setupLocationPermission()
-
 		return binding.root
 	}
 
-	private fun setupLocationPermission() {
+	private fun checkLocationPermission() {
 		val permission = ContextCompat.checkSelfPermission(this.requireContext(),
 			Manifest.permission.ACCESS_FINE_LOCATION)
 
-		if (permission != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this.requireActivity(),
-				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+		if (permission == PackageManager.PERMISSION_GRANTED) {
+			Timber.i("Permission already granted")
+			mMap.isMyLocationEnabled = true
+			mMap.uiSettings.isMyLocationButtonEnabled = true
+		} else {
+			Timber.i("Permission not yet granted. Asking for permission")
+			requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
 				LOCATION_REQUEST_CODE)
 		}
 	}
@@ -62,8 +65,9 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		when (requestCode) {
 			LOCATION_REQUEST_CODE -> {
 				if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
+					Timber.w("Permission denied!")
 				} else {
+					Timber.i("Permission granted")
 					mMap.isMyLocationEnabled = true
 					mMap.uiSettings.isMyLocationButtonEnabled = true
 				}
@@ -82,9 +86,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onMapReady(googleMap: GoogleMap) {
 		mMap = googleMap
 
-		// Add a marker in Wroclaw and move the camera
-		val wroclaw = LatLng(51.1079, 17.0385)
-		mMap.addMarker(MarkerOptions().position(wroclaw).title("Marker in Wroclaw"))
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13f), 500, null)
+		checkLocationPermission()
+
+		if (mMap.isMyLocationEnabled) {
+
+		} else {
+			// Add a marker in Wroclaw and move the camera
+			val wroclaw = LatLng(51.1079, 17.0385)
+			mMap.addMarker(MarkerOptions().position(wroclaw).title("Marker in Wroclaw"))
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13f), 500, null)
+		}
 	}
 }
