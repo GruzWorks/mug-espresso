@@ -1,9 +1,13 @@
 package test.mug.espresso
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -17,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.databinding.FragmentMapViewBinding
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
+	private val LOCATION_REQUEST_CODE: Int = 420
 
 	private lateinit var mMap: GoogleMap
 
@@ -33,7 +38,37 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
 
+		setupLocationPermission()
+
 		return binding.root
+	}
+
+	private fun setupLocationPermission() {
+		val permission = ContextCompat.checkSelfPermission(this.requireContext(),
+			Manifest.permission.ACCESS_FINE_LOCATION)
+
+		if (permission != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this.requireActivity(),
+				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+				LOCATION_REQUEST_CODE)
+		}
+	}
+
+	override fun onRequestPermissionsResult(
+		requestCode: Int,
+		permissions: Array<out String>,
+		grantResults: IntArray
+	) {
+		when (requestCode) {
+			LOCATION_REQUEST_CODE -> {
+				if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+				} else {
+					mMap.isMyLocationEnabled = true
+					mMap.uiSettings.isMyLocationButtonEnabled = true
+				}
+			}
+		}
 	}
 
 	/**
