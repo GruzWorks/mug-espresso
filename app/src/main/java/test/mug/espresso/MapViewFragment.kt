@@ -1,32 +1,54 @@
 package test.mug.espresso
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.databinding.FragmentMapViewBinding
+import timber.log.Timber
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
+	private val LOCATION_REQUEST_CODE: Int = 420
 
 	private lateinit var mMap: GoogleMap
 
-	override fun onCreateView(inflater: LayoutInflater,	container: ViewGroup?,
-	                          savedInstanceState: Bundle?): View? {
+	private lateinit var fusedLocationClient: FusedLocationProviderClient
+	private lateinit var lastLocation: Location
+
+	private lateinit var viewModel: DataViewModel
+
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
 		val binding: FragmentMapViewBinding = DataBindingUtil.inflate(
-			inflater, R.layout.fragment_map_view, container, false)
+			inflater, R.layout.fragment_map_view, container, false
+		)
+
+		viewModel = ViewModelProviders.of(this).get(DataViewModel::class.java)
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
+
+		fusedLocationClient =
+			LocationServices.getFusedLocationProviderClient(this.activity as Activity)
 
 		return binding.root
 	}
@@ -42,9 +64,65 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onMapReady(googleMap: GoogleMap) {
 		mMap = googleMap
 
-		// Add a marker in Wroclaw and move the camera
-		val wroclaw = LatLng(51.1079, 17.0385)
-		mMap.addMarker(MarkerOptions().position(wroclaw).title("Marker in Wroclaw"))
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13f), 500, null)
+		checkLocationPermission()
+		mMap.uiSettings.isZoomControlsEnabled = true
+
+		if (mMap.isMyLocationEnabled) {
+			moveToUserLocation()
+		} else {
+			moveToDefaultLocation()
+		}
+	}
+
+	override fun onRequestPermissionsResult(
+		requestCode: Int,
+		permissions: Array<out String>,
+		grantResults: IntArray
+	) {
+		when (requestCode) {
+			LOCATION_REQUEST_CODE -> {
+				if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+					Timber.w("Permission denied!")
+				} else {
+					mMap.isMyLocationEnabled = true
+					mMap.uiSettings.isMyLocationButtonEnabled = true
+					moveToUserLocation()
+				}
+			}
+		}
+	}
+
+	private fun checkLocationPermission() {
+		val permission = ContextCompat.checkSelfPermission(
+			this.requireContext(),
+			Manifest.permission.ACCESS_FINE_LOCATION
+		)
+
+		if (permission == PackageManager.PERMISSION_GRANTED) {
+			mMap.isMyLocationEnabled = true
+			mMap.uiSettings.isMyLocationButtonEnabled = true
+		} else {
+			requestPermissions(
+				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+				LOCATION_REQUEST_CODE
+			)
+		}
+	}
+
+	private fun moveToUserLocation() {
+		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
+			if (location != null) {
+				lastLocation = location
+				val currentLatLng = LatLng(location.latitude, location.longitude)
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+			} else {
+				moveToDefaultLocation()
+			}
+		}
+	}
+
+	private fun moveToDefaultLocation() {
+		val defaultLoc = LatLng(51.1079, 17.0385) // Wroclaw
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 13f), 500, null)
 	}
 }
