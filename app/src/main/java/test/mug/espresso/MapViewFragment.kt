@@ -53,54 +53,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		return binding.root
 	}
 
-	private fun checkLocationPermission() {
-		val permission = ContextCompat.checkSelfPermission(
-			this.requireContext(),
-			Manifest.permission.ACCESS_FINE_LOCATION
-		)
-
-		if (permission == PackageManager.PERMISSION_GRANTED) {
-			Timber.i("Permission already granted")
-			mMap.isMyLocationEnabled = true
-			mMap.uiSettings.isMyLocationButtonEnabled = true
-		} else {
-			Timber.i("Permission not yet granted. Asking for permission")
-			requestPermissions(
-				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-				LOCATION_REQUEST_CODE
-			)
-		}
-	}
-
-	override fun onRequestPermissionsResult(
-		requestCode: Int,
-		permissions: Array<out String>,
-		grantResults: IntArray
-	) {
-		when (requestCode) {
-			LOCATION_REQUEST_CODE -> {
-				if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-					Timber.w("Permission denied!")
-				} else {
-					Timber.i("Permission granted")
-					mMap.isMyLocationEnabled = true
-					mMap.uiSettings.isMyLocationButtonEnabled = true
-					moveToUserLocation()
-				}
-			}
-		}
-	}
-
-	private fun moveToUserLocation() {
-		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
-			if (location != null) {
-				lastLocation = location
-				val currentLatLng = LatLng(location.latitude, location.longitude)
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
-			}
-		}
-	}
-
 	/**
 	 * Manipulates the map once available.
 	 * This callback is triggered when the map is ready to be used.
@@ -118,9 +70,59 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		if (mMap.isMyLocationEnabled) {
 			moveToUserLocation()
 		} else {
-			// Move the camera to Wroclaw
-			val wroclaw = LatLng(51.1079, 17.0385)
-			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13f), 500, null)
+			moveToDefaultLocation()
 		}
+	}
+
+	override fun onRequestPermissionsResult(
+		requestCode: Int,
+		permissions: Array<out String>,
+		grantResults: IntArray
+	) {
+		when (requestCode) {
+			LOCATION_REQUEST_CODE -> {
+				if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+					Timber.w("Permission denied!")
+				} else {
+					mMap.isMyLocationEnabled = true
+					mMap.uiSettings.isMyLocationButtonEnabled = true
+					moveToUserLocation()
+				}
+			}
+		}
+	}
+
+	private fun checkLocationPermission() {
+		val permission = ContextCompat.checkSelfPermission(
+			this.requireContext(),
+			Manifest.permission.ACCESS_FINE_LOCATION
+		)
+
+		if (permission == PackageManager.PERMISSION_GRANTED) {
+			mMap.isMyLocationEnabled = true
+			mMap.uiSettings.isMyLocationButtonEnabled = true
+		} else {
+			requestPermissions(
+				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+				LOCATION_REQUEST_CODE
+			)
+		}
+	}
+
+	private fun moveToUserLocation() {
+		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
+			if (location != null) {
+				lastLocation = location
+				val currentLatLng = LatLng(location.latitude, location.longitude)
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+			} else {
+				moveToDefaultLocation()
+			}
+		}
+	}
+
+	private fun moveToDefaultLocation() {
+		val defaultLoc = LatLng(51.1079, 17.0385) // Wroclaw
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 13f), 500, null)
 	}
 }
