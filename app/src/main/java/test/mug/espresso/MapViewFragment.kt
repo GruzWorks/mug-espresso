@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,10 +20,14 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var mMap: GoogleMap
 
+	private lateinit var viewModel: DataViewModel
+
 	override fun onCreateView(inflater: LayoutInflater,	container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		val binding: FragmentMapViewBinding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_map_view, container, false)
+
+		viewModel = ViewModelProviders.of(this).get(DataViewModel::class.java)
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
