@@ -1,23 +1,25 @@
 package test.mug.espresso
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.databinding.FragmentMapViewBinding
 import timber.log.Timber
 
@@ -26,12 +28,18 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var mMap: GoogleMap
 
+	private lateinit var fusedLocationClient: FusedLocationProviderClient
+	private lateinit var lastLocation: Location
+
 	private lateinit var viewModel: DataViewModel
 
-	override fun onCreateView(inflater: LayoutInflater,	container: ViewGroup?,
-	                          savedInstanceState: Bundle?): View? {
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
 		val binding: FragmentMapViewBinding = DataBindingUtil.inflate(
-			inflater, R.layout.fragment_map_view, container, false)
+			inflater, R.layout.fragment_map_view, container, false
+		)
 
 		viewModel = ViewModelProviders.of(this).get(DataViewModel::class.java)
 
@@ -39,12 +47,17 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
 
+		fusedLocationClient =
+			LocationServices.getFusedLocationProviderClient(this.activity as Activity)
+
 		return binding.root
 	}
 
 	private fun checkLocationPermission() {
-		val permission = ContextCompat.checkSelfPermission(this.requireContext(),
-			Manifest.permission.ACCESS_FINE_LOCATION)
+		val permission = ContextCompat.checkSelfPermission(
+			this.requireContext(),
+			Manifest.permission.ACCESS_FINE_LOCATION
+		)
 
 		if (permission == PackageManager.PERMISSION_GRANTED) {
 			Timber.i("Permission already granted")
@@ -52,8 +65,10 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			mMap.uiSettings.isMyLocationButtonEnabled = true
 		} else {
 			Timber.i("Permission not yet granted. Asking for permission")
-			requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-				LOCATION_REQUEST_CODE)
+			requestPermissions(
+				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+				LOCATION_REQUEST_CODE
+			)
 		}
 	}
 
@@ -70,7 +85,18 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 					Timber.i("Permission granted")
 					mMap.isMyLocationEnabled = true
 					mMap.uiSettings.isMyLocationButtonEnabled = true
+					moveToUserLocation()
 				}
+			}
+		}
+	}
+
+	private fun moveToUserLocation() {
+		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
+			if (location != null) {
+				lastLocation = location
+				val currentLatLng = LatLng(location.latitude, location.longitude)
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
 			}
 		}
 	}
@@ -87,13 +113,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		mMap = googleMap
 
 		checkLocationPermission()
+		mMap.uiSettings.isZoomControlsEnabled = true
 
 		if (mMap.isMyLocationEnabled) {
-
+			moveToUserLocation()
 		} else {
-			// Add a marker in Wroclaw and move the camera
+			// Move the camera to Wroclaw
 			val wroclaw = LatLng(51.1079, 17.0385)
-			mMap.addMarker(MarkerOptions().position(wroclaw).title("Marker in Wroclaw"))
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13f), 500, null)
 		}
 	}
