@@ -3,8 +3,9 @@ package test.mug.espresso.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.android.gms.maps.model.LatLng
 
-@Entity
+@Entity(tableName = "PowerMugs")
 data class PowerMug (
 	@PrimaryKey(autoGenerate = true)
 	var id: Long = 0L,
@@ -13,16 +14,11 @@ data class PowerMug (
 	var name: String,
 
 	@ColumnInfo
-	var point: MapPoint,
+	var point: LatLng,
 
 	@ColumnInfo
 	var address: String,
 
 	@ColumnInfo
 	var numberOfMugs: Int
-)
-
-data class MapPoint (
-	var lat: Double,
-	var lan: Double
 )
