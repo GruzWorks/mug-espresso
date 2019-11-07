@@ -15,7 +15,9 @@ data class DbPowerMug (
 	var name: String,
 
 	@ColumnInfo
-	var point: LatLng,
+	var lat: Double,
+	@ColumnInfo
+	var lng: Double,
 
 	@ColumnInfo
 	var address: String,
@@ -29,7 +31,7 @@ fun List<DbPowerMug>.asDomainModel(): List<PowerMug> {
 		PowerMug(
 			id = it.id,
 			name = it.name,
-			point = it.point,
+			point = LatLng(it.lat, it.lng),
 			address = it.address,
 			numberOfMugs = it.numberOfMugs)
 	}
