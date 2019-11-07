@@ -25,12 +25,12 @@ data class DbPowerMug (
 )
 
 fun List<DbPowerMug>.asDomainModel(): List<PowerMug> {
-		return map {
-			PowerMug(
-				id = it.id,
-				name = it.name,
-				point = it.point,
-				address = it.address,
-				numberOfMugs = it.numberOfMugs)
-		}
+	return map {
+		PowerMug(
+			id = it.id,
+			name = it.name,
+			point = it.point,
+			address = it.address,
+			numberOfMugs = it.numberOfMugs)
 	}
+}
