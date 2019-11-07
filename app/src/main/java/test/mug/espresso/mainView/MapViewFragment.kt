@@ -1,4 +1,4 @@
-package test.mug.espresso
+package test.mug.espresso.mainView
 
 import android.Manifest
 import android.app.Activity

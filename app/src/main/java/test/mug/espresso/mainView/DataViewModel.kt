@@ -1,4 +1,4 @@
-package test.mug.espresso
+package test.mug.espresso.mainView
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
