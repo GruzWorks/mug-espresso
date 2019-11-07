@@ -4,6 +4,12 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:context=".mainView.MapViewFragment">
 
+	<data>
+		<variable
+			name="viewModel"
+			type="test.mug.espresso.mainView.DataViewModel" />
+	</data>
+
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

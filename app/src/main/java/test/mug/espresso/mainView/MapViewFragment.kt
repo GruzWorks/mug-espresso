@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -20,6 +21,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentMapViewBinding
 import timber.log.Timber
 
@@ -31,7 +34,24 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
 	private lateinit var lastLocation: Location
 
-	private lateinit var viewModel: DataViewModel
+	private val viewModel: DataViewModel by lazy {
+		val activity = requireNotNull(this.activity) {
+			"You can only access the viewModel after onActivityCreated()"
+		}
+		ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
+			.get(DataViewModel::class.java)
+	}
+
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
+		super.onActivityCreated(savedInstanceState)
+
+		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
+			val it = mugs.listIterator()
+			for (item in it) {
+				mMap.addMarker(item)
+			}
+		})
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +61,9 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			inflater, R.layout.fragment_map_view, container, false
 		)
 
-		viewModel = ViewModelProviders.of(this).get(DataViewModel::class.java)
+		binding.setLifecycleOwner(viewLifecycleOwner)
+
+		binding.viewModel = viewModel
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
