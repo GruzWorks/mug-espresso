@@ -1,7 +1,8 @@
-package test.mug.espresso
+package test.mug.espresso.mainView
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineScope
@@ -9,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import test.mug.espresso.database.getDatabase
+import test.mug.espresso.domain.asMarkerOptions
 import test.mug.espresso.repository.PowerMugRepository
 
 class DataViewModel(application: Application) : AndroidViewModel(application) {
@@ -30,6 +32,10 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	val powerMugs = repository.powerMugs
+
+	val markers = Transformations.map(powerMugs) {
+		it.asMarkerOptions()
+	}
 
 	/**
 	 * Cancel all coroutines when the ViewModel is cleared

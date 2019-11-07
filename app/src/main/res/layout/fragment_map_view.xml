@@ -2,7 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:context=".MapViewFragment">
+	tools:context=".mainView.MapViewFragment">
+
+	<data>
+		<variable
+			name="viewModel"
+			type="test.mug.espresso.mainView.DataViewModel" />
+	</data>
 
 	<ScrollView
 		android:layout_width="match_parent"
