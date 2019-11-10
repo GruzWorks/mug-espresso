@@ -7,7 +7,7 @@
 
 		<variable
 			name="point"
-			type="test.mug.espresso.domain.PowerMug" />
+			type="test.mug.espresso.domain.PowerMugWithDistance" />
 
 <!--		<variable-->
 <!--			name="videoCallback"-->
@@ -66,7 +66,7 @@
 				android:id="@+id/pointLng"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@{Double.toString(point.point.longitude)}"
+				android:text="@{Double.toString(point.distance)}"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"

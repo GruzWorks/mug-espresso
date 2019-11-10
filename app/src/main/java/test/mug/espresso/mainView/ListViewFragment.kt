@@ -15,15 +15,17 @@ import androidx.recyclerview.widget.RecyclerView
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentListViewBinding
 import test.mug.espresso.databinding.ListviewItemBinding
-import test.mug.espresso.domain.PowerMug
+import test.mug.espresso.domain.PowerMugWithDistance
 
 class ListViewFragment : Fragment() {
 	private val viewModel: DataViewModel by lazy {
 		val activity = requireNotNull(this.activity) {
 			"You can only access the viewModel after onActivityCreated()"
 		}
-		ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
-			.get(DataViewModel::class.java)
+		activity.run {
+			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
+				.get(DataViewModel::class.java)
+		}
 	}
 
 	private var viewModelAdapter: ListViewAdapter? = null
@@ -31,7 +33,7 @@ class ListViewFragment : Fragment() {
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
 
-		viewModel.powerMugs.observe(viewLifecycleOwner, Observer<List<PowerMug>> { mugs ->
+		viewModel.powerMugsWithDistance.observe(viewLifecycleOwner, Observer<List<PowerMugWithDistance>> { mugs ->
 			mugs?.apply {
 				viewModelAdapter?.powerMugs = mugs
 			}
@@ -69,7 +71,7 @@ class ListViewFragment : Fragment() {
 }
 
 class ListViewAdapter : RecyclerView.Adapter<ListViewViewHolder>() {
-	var powerMugs: List<PowerMug> = emptyList()
+	var powerMugs: List<PowerMugWithDistance> = emptyList()
 		set(value) {
 			field = value
 			notifyDataSetChanged()
