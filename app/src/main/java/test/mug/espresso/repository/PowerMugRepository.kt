@@ -18,11 +18,11 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 
 	suspend fun refreshCache() {
 		withContext(Dispatchers.IO) {
-			createRandomEntryNearWroclaw()
+			//createRandomEntryNearWroclaw()
 		}
 	}
 
-	fun createRandomEntryNearWroclaw() {
+	private fun createRandomEntryNearWroclaw() {
 		val x = DbPowerMug(
 			0,
 			"Test " + SimpleDateFormat("dd/M/yyyy hh:mm:ss").toString(),
