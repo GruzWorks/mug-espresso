@@ -51,7 +51,8 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toStartOf="@+id/buttonListView"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
+				app:layout_constraintTop_toBottomOf="@+id/recycler_view"
+				android:onClick="@{() -> viewModel.goToSecondView()}" />
 
 			<Button
 				android:id="@+id/buttonListView"

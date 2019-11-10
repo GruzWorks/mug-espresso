@@ -20,6 +20,8 @@
 		android:label="ListViewFragment" >
 		<action
 			android:id="@+id/action_listViewFragment_to_mapViewFragment"
-			app:destination="@id/mapViewFragment" />
+			app:destination="@id/mapViewFragment"
+			app:popUpTo="@+id/mapViewFragment"
+			app:popUpToInclusive="true" />
 	</fragment>
 </navigation>

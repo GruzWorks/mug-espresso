@@ -51,7 +51,7 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toEndOf="@+id/buttonMapView"
 				app:layout_constraintTop_toBottomOf="@+id/map"
-				android:onClick="@{() -> viewModel.goToSecondView()()}" />
+				android:onClick="@{() -> viewModel.goToSecondView()}" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
