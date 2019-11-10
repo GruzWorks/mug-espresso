@@ -32,27 +32,33 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@{point.name}"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toStartOf="@+id/pointLat"
-				app:layout_constraintTop_toTopOf="parent" />
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="Point Name" />
 
 			<TextView
 				android:id="@+id/pointLat"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@{Double.toString(point.point.latitude)}"
-				app:layout_constraintStart_toEndOf="@+id/pointName"
+				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toStartOf="@+id/pointLng"
-				app:layout_constraintTop_toTopOf="parent" />
+				app:layout_constraintStart_toEndOf="@+id/pointName"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="Point Lat" />
 
 			<TextView
 				android:id="@+id/pointLng"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@{Double.toString(point.point.longitude)}"
+				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toEndOf="@+id/pointLat"
-				app:layout_constraintTop_toTopOf="parent" />
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="Point Lon" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</com.google.android.material.card.MaterialCardView>
