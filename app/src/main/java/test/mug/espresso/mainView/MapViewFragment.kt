@@ -46,13 +46,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
 
-		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
-			val it = mugs.listIterator()
-			for (item in it) {
-				mMap.addMarker(item)
-			}
-		})
-
 		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
 				this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
@@ -102,6 +95,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		} else {
 			moveToDefaultLocation()
 		}
+
+		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
+			val it = mugs.listIterator()
+			for (item in it) {
+				mMap.addMarker(item)
+			}
+		})
 	}
 
 	override fun onRequestPermissionsResult(
