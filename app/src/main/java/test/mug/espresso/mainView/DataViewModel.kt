@@ -1,10 +1,7 @@
 package test.mug.espresso.mainView
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,6 +18,10 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val database = getDatabase(application)
 	private val repository = PowerMugRepository(database)
+
+	private var _navigateToSecondView = MutableLiveData<Boolean>()
+	val navigateToSecondView: LiveData<Boolean>
+		get() = _navigateToSecondView
 
 	/**
 	 * init{} is called immediately when this ViewModel is created.
@@ -43,6 +44,14 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 	override fun onCleared() {
 		super.onCleared()
 		viewModelJob.cancel()
+	}
+
+	fun goToSecondView() {
+		_navigateToSecondView.value = true
+	}
+
+	fun wentToSecondView() {
+		_navigateToSecondView.value = false
 	}
 
 	class Factory(val app: Application) : ViewModelProvider.Factory {

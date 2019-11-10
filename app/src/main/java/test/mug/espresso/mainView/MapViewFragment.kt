@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -49,6 +50,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			val it = mugs.listIterator()
 			for (item in it) {
 				mMap.addMarker(item)
+			}
+		})
+
+		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
+				viewModel.wentToSecondView()
 			}
 		})
 	}
