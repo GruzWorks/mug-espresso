@@ -58,7 +58,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 				calculateDistance(item.point),
 				item.numberOfMugs
 			)
-		}
+		}.sortedBy { it.distance }
 	}
 
 	private fun calculateDistance(point: LatLng) : Double {
