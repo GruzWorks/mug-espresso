@@ -41,15 +41,15 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 		Timber.i("ViewModelCreated")
 	}
 
-	val powerMugs = repository.powerMugs
+	var powerMugs = repository.powerMugs
 
-	val markers = Transformations.map(powerMugs) {
+	var markers = Transformations.map(powerMugs) {
 		it.asMarkerOptions()
 	}
 
-	val lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
+	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
 
-	val powerMugsWithDistance = Transformations.map(powerMugs) { mugs ->
+	var powerMugsWithDistance = Transformations.map(powerMugs) { mugs ->
 		mugs.map { item ->
 			PowerMugWithDistance(
 				item.id,
