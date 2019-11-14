@@ -19,59 +19,61 @@
 		android:layout_height="wrap_content"
 		app:cardCornerRadius="0dp"
 		app:cardElevation="5dp"
-		android:layout_marginTop="8dp"
-		android:layout_marginBottom="16dp">
+		android:layout_marginTop="4dp"
+		android:layout_marginBottom="4dp">
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
 			<TextView
-				android:id="@+id/pointNumber"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="8dp"
-				android:text="@{Long.toString(point.id)}"
-				app:layout_constraintBottom_toTopOf="@+id/pointName"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				tools:text="Point Number" />
-
-			<TextView
 				android:id="@+id/pointName"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:layout_marginStart="8dp"
+				android:layout_marginTop="4dp"
+				android:layout_marginEnd="8dp"
 				android:layout_marginBottom="8dp"
 				android:text="@{point.name}"
-				app:layout_constraintBottom_toTopOf="@+id/pointLat"
-				app:layout_constraintEnd_toEndOf="parent"
+				android:textSize="22sp"
+				app:layout_constraintBottom_toTopOf="@+id/pointAddress"
+				app:layout_constraintEnd_toStartOf="@+id/pointDistance"
+				app:layout_constraintHorizontal_bias="0.0"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/pointNumber"
-				tools:text="Point Name" />
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="CH Unicornia" />
 
 			<TextView
-				android:id="@+id/pointLat"
-				android:layout_width="wrap_content"
+				android:id="@+id/pointAddress"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="8dp"
-				android:text="@{Double.toString(point.point.latitude)}"
-				app:layout_constraintBottom_toTopOf="@+id/pointLng"
-				app:layout_constraintEnd_toEndOf="parent"
+				android:layout_marginStart="8dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginBottom="4dp"
+				android:text="@{point.address}"
+				android:textSize="21sp"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toStartOf="@+id/pointDistance"
+				app:layout_constraintHorizontal_bias="0.0"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/pointName"
-				tools:text="Point Lat" />
+				tools:text="ul. Walecznych Pegazów 420, 69-911 Ziemniaków" />
 
 			<TextView
-				android:id="@+id/pointLng"
+				android:id="@+id/pointDistance"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@{Double.toString(point.distance)}"
+				android:layout_marginTop="4dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginBottom="4dp"
+				android:text="@{point.formatDistance(point.distance)}"
+				android:textSize="22sp"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="1.0"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/pointLat"
-				tools:text="Point Lon" />
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="200m" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</com.google.android.material.card.MaterialCardView>
