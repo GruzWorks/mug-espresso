@@ -26,6 +26,7 @@ import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentDetailViewBinding
 import test.mug.espresso.databinding.FragmentMapViewBinding
 import test.mug.espresso.domain.PowerMug
+import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
 class DetailViewFragment : Fragment(), OnMapReadyCallback {
@@ -45,9 +46,11 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 			inflater, R.layout.fragment_detail_view, container, false
 		)
 
-		val powerMug = DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace
+		val repository = getRepository(requireNotNull(activity).application)
 
-		val viewModelFactory = DetailViewModelFactory(powerMug)
+		val powerMug = repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
+
+		val viewModelFactory = DetailViewModelFactory(powerMug!!)
 		viewModel = ViewModelProviders.of(this, viewModelFactory)
 			.get(DetailViewModel::class.java)
 
