@@ -143,7 +143,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
 			if (location != null) {
 				viewModel.lastLocation.value = LatLng(location.latitude, location.longitude)
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 15f))
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 15f), 1000, null)
 			} else {
 				moveToDefaultLocation()
 			}
@@ -152,6 +152,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private fun moveToDefaultLocation() {
 		viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 500, null)
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
 	}
 }
