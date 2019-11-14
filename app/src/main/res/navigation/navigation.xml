@@ -13,6 +13,9 @@
 		<action
 			android:id="@+id/action_mapViewFragment_to_listViewFragment"
 			app:destination="@id/listViewFragment" />
+		<action
+			android:id="@+id/action_mapViewFragment_to_detailViewFragment"
+			app:destination="@id/detailViewFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/listViewFragment"
@@ -23,5 +26,23 @@
 			app:destination="@id/mapViewFragment"
 			app:popUpTo="@+id/mapViewFragment"
 			app:popUpToInclusive="true" />
+		<action
+			android:id="@+id/action_listViewFragment_to_detailViewFragment"
+			app:destination="@id/detailViewFragment" />
+	</fragment>
+	<fragment
+		android:id="@+id/detailViewFragment"
+		android:name="test.mug.espresso.detailView.DetailViewFragment"
+		android:label="DetailViewFragment" >
+		<argument
+			android:name="selectedPlace"
+			app:argType="test.mug.espresso.domain.PowerMug"
+			/>
+		<action
+			android:id="@+id/action_detailViewFragment_to_mapViewFragment"
+			app:destination="@id/mapViewFragment" />
+		<action
+			android:id="@+id/action_detailViewFragment_to_listViewFragment"
+			app:destination="@id/listViewFragment" />
 	</fragment>
 </navigation>
