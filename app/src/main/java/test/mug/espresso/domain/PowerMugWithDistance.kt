@@ -11,7 +11,8 @@ data class PowerMugWithDistance (
 	var numberOfMugs: Int
 ) {
 	fun formatDistance(distance: Double) : String {
-		var distance = distance // kotlin made all function parameters as val and they cannot be reassigned
+		@Suppress("NAME_SHADOWING") // kotlin made all function parameters as val and they cannot be reassigned
+		var distance = distance
 
 		if (distance < 0) {
 			distance *= -1
