@@ -3,7 +3,6 @@ package test.mug.espresso.mainView
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -32,23 +32,24 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private lateinit var mMap: GoogleMap
 
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
-	private lateinit var lastLocation: Location
 
 	private val viewModel: DataViewModel by lazy {
 		val activity = requireNotNull(this.activity) {
 			"You can only access the viewModel after onActivityCreated()"
 		}
-		ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
-			.get(DataViewModel::class.java)
+		activity.run {
+			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
+				.get(DataViewModel::class.java)
+		}
 	}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
 
-		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
-			val it = mugs.listIterator()
-			for (item in it) {
-				mMap.addMarker(item)
+		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
+				viewModel.wentToSecondView()
 			}
 		})
 	}
@@ -94,6 +95,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		} else {
 			moveToDefaultLocation()
 		}
+
+		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
+			val it = mugs.listIterator()
+			for (item in it) {
+				mMap.addMarker(item)
+			}
+		})
 	}
 
 	override fun onRequestPermissionsResult(
@@ -134,9 +142,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private fun moveToUserLocation() {
 		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
 			if (location != null) {
-				lastLocation = location
-				val currentLatLng = LatLng(location.latitude, location.longitude)
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+				viewModel.lastLocation.value = LatLng(location.latitude, location.longitude)
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 15f), 1000, null)
 			} else {
 				moveToDefaultLocation()
 			}
@@ -144,7 +151,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	}
 
 	private fun moveToDefaultLocation() {
-		val defaultLoc = LatLng(51.1079, 17.0385) // Wroclaw
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 13f), 500, null)
+		viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
 	}
 }
