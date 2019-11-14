@@ -28,7 +28,7 @@
 			app:popUpToInclusive="true" />
 		<action
 			android:id="@+id/action_listViewFragment_to_detailViewFragment"
-			app:destination="@id/detailViewFragment" />
+			app:destination="@+id/detailViewFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/detailViewFragment"

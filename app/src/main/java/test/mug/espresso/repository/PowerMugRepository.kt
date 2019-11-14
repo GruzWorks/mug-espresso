@@ -25,7 +25,12 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 	}
 
 	fun returnPlace(key: Long) : PowerMug? {
-		return database.powerMugDatabaseDao.get(key)?.asDomainModel()
+		for (item in powerMugs.value!!) {
+			if (item.id == key) {
+				return item
+			}
+		}
+		return null
 	}
 
 	private fun createRandomEntryNearWroclaw() {

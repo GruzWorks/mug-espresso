@@ -1,6 +1,7 @@
 package test.mug.espresso.mainView
 
 import android.os.Bundle
+import android.os.ProxyFileDescriptorCallback
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentListViewBinding
 import test.mug.espresso.databinding.ListviewItemBinding
+import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.domain.PowerMugWithDistance
 
 class ListViewFragment : Fragment() {
@@ -41,7 +43,7 @@ class ListViewFragment : Fragment() {
 
 		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
-				this.findNavController().navigate(R.id.action_listViewFragment_to_mapViewFragment)
+				this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToMapViewFragment())
 				viewModel.wentToSecondView()
 			}
 		})
@@ -61,7 +63,9 @@ class ListViewFragment : Fragment() {
 
 		binding.viewModel = viewModel
 
-		viewModelAdapter = ListViewAdapter()
+		viewModelAdapter = ListViewAdapter(PowerMugListener {
+			this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToDetailViewFragment(it))
+		})
 
 		binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
 			layoutManager = LinearLayoutManager(context)
@@ -72,7 +76,11 @@ class ListViewFragment : Fragment() {
 	}
 }
 
-class ListViewAdapter : RecyclerView.Adapter<ListViewViewHolder>() {
+class PowerMugListener(val clickListener: (powerMugId: Long) -> Unit) {
+	fun onClick(powerMug: PowerMugWithDistance) = clickListener(powerMug.id)
+}
+
+class ListViewAdapter(val callback: PowerMugListener) : RecyclerView.Adapter<ListViewViewHolder>() {
 	var powerMugs: List<PowerMugWithDistance> = emptyList()
 		set(value) {
 			field = value
@@ -93,6 +101,7 @@ class ListViewAdapter : RecyclerView.Adapter<ListViewViewHolder>() {
 	override fun onBindViewHolder(holder: ListViewViewHolder, position: Int) {
 		holder.viewDataBinding.also {
 			it.point = powerMugs[position]
+			it.pointCallback = callback
 		}
 	}
 }
