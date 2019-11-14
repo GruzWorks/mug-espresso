@@ -62,8 +62,6 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 		}.sortedBy { it.distance }
 	}
 
-
-
 	/**
 	 * Cancel all coroutines when the ViewModel is cleared
 	 */
@@ -78,6 +76,13 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun wentToSecondView() {
 		_navigateToSecondView.value = false
+	}
+
+	fun refreshDistance() {
+		powerMugsWithDistance.value?.forEach { item ->
+			item.distance = calculateDistance(lastLocation.value!!, item.point)
+		}
+		powerMugsWithDistance.value?.sortedBy { it.distance }
 	}
 
 	class Factory(val app: Application) : ViewModelProvider.Factory {

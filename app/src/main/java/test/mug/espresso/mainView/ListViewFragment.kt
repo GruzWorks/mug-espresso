@@ -45,6 +45,8 @@ class ListViewFragment : Fragment() {
 				viewModel.wentToSecondView()
 			}
 		})
+
+		viewModel.refreshDistance()
 	}
 
 	override fun onCreateView(
