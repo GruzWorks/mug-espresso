@@ -84,7 +84,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.id.toString()))
 
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f), 1000, null)
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
 	}
 
 	override fun onRequestPermissionsResult(
