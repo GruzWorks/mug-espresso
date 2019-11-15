@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentMapViewBinding
@@ -101,6 +102,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			for (item in it) {
 				mMap.addMarker(item)
 			}
+			mMap.setOnMarkerClickListener(markerClickListener)
 		})
 	}
 
@@ -153,5 +155,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private fun moveToDefaultLocation() {
 		viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
+	}
+
+	private val markerClickListener = object : GoogleMap.OnMarkerClickListener {
+		override fun onMarkerClick(marker: Marker?): Boolean {
+			this@MapViewFragment.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
+				marker!!.title.toLong()))
+			return true
+		}
 	}
 }
