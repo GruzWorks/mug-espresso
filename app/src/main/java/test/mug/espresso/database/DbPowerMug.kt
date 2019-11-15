@@ -26,13 +26,18 @@ data class DbPowerMug (
 	var numberOfMugs: Int
 )
 
+fun DbPowerMug.asDomainModel() : PowerMug {
+	return PowerMug(
+		id,
+		name,
+		LatLng(lat, lng),
+		address,
+		numberOfMugs
+	)
+}
+
 fun List<DbPowerMug>.asDomainModel(): List<PowerMug> {
 	return map {
-		PowerMug(
-			id = it.id,
-			name = it.name,
-			point = LatLng(it.lat, it.lng),
-			address = it.address,
-			numberOfMugs = it.numberOfMugs)
+		it.asDomainModel()
 	}
 }

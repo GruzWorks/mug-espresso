@@ -1,4 +1,4 @@
-package test.mug.espresso.mainView
+package test.mug.espresso.detailView
 
 import android.Manifest
 import android.app.Activity
@@ -21,51 +21,42 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
+import test.mug.espresso.databinding.FragmentDetailViewBinding
 import test.mug.espresso.databinding.FragmentMapViewBinding
+import test.mug.espresso.domain.PowerMug
+import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
-class MapViewFragment : Fragment(), OnMapReadyCallback {
+class DetailViewFragment : Fragment(), OnMapReadyCallback {
 	private val LOCATION_REQUEST_CODE: Int = 420
 
 	private lateinit var mMap: GoogleMap
 
+	private lateinit var viewModel: DetailViewModel
+
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-	private val viewModel: DataViewModel by lazy {
-		val activity = requireNotNull(this.activity) {
-			"You can only access the viewModel after onActivityCreated()"
-		}
-		activity.run {
-			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
-				.get(DataViewModel::class.java)
-		}
-	}
-
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
-
-		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
-			if (it == true) {
-				this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
-				viewModel.wentToSecondView()
-			}
-		})
-	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentMapViewBinding = DataBindingUtil.inflate(
-			inflater, R.layout.fragment_map_view, container, false
+		val binding: FragmentDetailViewBinding = DataBindingUtil.inflate(
+			inflater, R.layout.fragment_detail_view, container, false
 		)
 
-		binding.setLifecycleOwner(viewLifecycleOwner)
+		val repository = getRepository(requireNotNull(activity).application)
+
+		val powerMug = repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
+
+		val viewModelFactory = DetailViewModelFactory(powerMug!!)
+		viewModel = ViewModelProviders.of(this, viewModelFactory)
+			.get(DetailViewModel::class.java)
 
 		binding.viewModel = viewModel
+
+		binding.setLifecycleOwner(viewLifecycleOwner)
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
@@ -91,19 +82,9 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		checkLocationPermission()
 		mMap.uiSettings.isZoomControlsEnabled = true
 
-		if (mMap.isMyLocationEnabled) {
-			moveToUserLocation()
-		} else {
-			moveToDefaultLocation()
-		}
+		mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.id.toString()))
 
-		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
-			val it = mugs.listIterator()
-			for (item in it) {
-				mMap.addMarker(item)
-			}
-			mMap.setOnMarkerClickListener(markerClickListener)
-		})
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
 	}
 
 	override fun onRequestPermissionsResult(
@@ -118,7 +99,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 				} else {
 					mMap.isMyLocationEnabled = true
 					mMap.uiSettings.isMyLocationButtonEnabled = true
-					moveToUserLocation()
 				}
 			}
 		}
@@ -138,30 +118,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 				arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
 				LOCATION_REQUEST_CODE
 			)
-		}
-	}
-
-	private fun moveToUserLocation() {
-		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
-			if (location != null) {
-				viewModel.lastLocation.value = LatLng(location.latitude, location.longitude)
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 15f), 1000, null)
-			} else {
-				moveToDefaultLocation()
-			}
-		}
-	}
-
-	private fun moveToDefaultLocation() {
-		viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
-	}
-
-	private val markerClickListener = object : GoogleMap.OnMarkerClickListener {
-		override fun onMarkerClick(marker: Marker?): Boolean {
-			this@MapViewFragment.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
-				marker!!.title.toLong()))
-			return true
 		}
 	}
 }

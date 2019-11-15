@@ -12,6 +12,7 @@ import test.mug.espresso.database.getDatabase
 import test.mug.espresso.domain.PowerMugWithDistance
 import test.mug.espresso.domain.asMarkerOptions
 import test.mug.espresso.repository.PowerMugRepository
+import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -24,8 +25,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-	private val database = getDatabase(application)
-	private val repository = PowerMugRepository(database)
+	private val repository = getRepository(application)
 
 	private var _navigateToSecondView = MutableLiveData<Boolean>()
 	val navigateToSecondView: LiveData<Boolean>

@@ -1,5 +1,6 @@
 package test.mug.espresso.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
@@ -7,6 +8,7 @@ import kotlinx.coroutines.withContext
 import test.mug.espresso.database.DbPowerMug
 import test.mug.espresso.database.PowerMugDatabase
 import test.mug.espresso.database.asDomainModel
+import test.mug.espresso.database.getDatabase
 import test.mug.espresso.domain.PowerMug
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +24,15 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		}
 	}
 
+	fun returnPlace(key: Long) : PowerMug? {
+		for (item in powerMugs.value!!) {
+			if (item.id == key) {
+				return item
+			}
+		}
+		return null
+	}
+
 	private fun createRandomEntryNearWroclaw() {
 		val x = DbPowerMug(
 			0,
@@ -33,4 +44,17 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		)
 		database.powerMugDatabaseDao.insert(x)
 	}
+}
+
+private lateinit var INSTANCE: PowerMugRepository
+
+fun getRepository(context: Context): PowerMugRepository {
+	synchronized(PowerMugDatabase::class.java) {
+		if (!::INSTANCE.isInitialized) {
+			val db = getDatabase(context)
+			INSTANCE = PowerMugRepository(db)
+		}
+	}
+
+	return INSTANCE
 }

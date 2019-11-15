@@ -9,9 +9,9 @@
 			name="point"
 			type="test.mug.espresso.domain.PowerMugWithDistance" />
 
-<!--		<variable-->
-<!--			name="videoCallback"-->
-<!--			type="com.example.android.devbyteviewer.ui.VideoClick" />-->
+		<variable
+			name="pointCallback"
+			type="test.mug.espresso.mainView.PowerMugListener" />
 	</data>
 
 	<com.google.android.material.card.MaterialCardView
@@ -20,7 +20,8 @@
 		app:cardCornerRadius="0dp"
 		app:cardElevation="5dp"
 		android:layout_marginTop="4dp"
-		android:layout_marginBottom="4dp">
+		android:layout_marginBottom="4dp"
+		android:onClick="@{() -> pointCallback.onClick(point)}">
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
