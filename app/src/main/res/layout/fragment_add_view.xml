@@ -94,7 +94,7 @@
 					android:layout_marginBottom="16dp"
 					android:clickable="true"
 					android:focusable="true"
-					android:src="@android:drawable/ic_menu_edit"
+					android:src="@android:drawable/ic_menu_send"
 					android:tint="#202020"
 					app:backgroundTint="#F0F0F0"
 					app:layout_constraintBottom_toBottomOf="parent"
