@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Project Thunderbolt</string>
+	<string name="detailsLabel">Szczegóły</string>
+	<string name="list_view">Lista</string>
+	<string name="map_view">Mapa</string>
+	<string name="no_of_mugs_format">Ilość dostępnych gniazdek: %d</string>
+</resources>
