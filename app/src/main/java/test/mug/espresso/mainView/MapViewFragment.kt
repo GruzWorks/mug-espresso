@@ -89,7 +89,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		mMap = googleMap
 
 		checkLocationPermission()
-		mMap.uiSettings.isZoomControlsEnabled = true
 
 		if (mMap.isMyLocationEnabled) {
 			moveToUserLocation()
