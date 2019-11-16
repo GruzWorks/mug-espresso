@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -50,8 +52,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		val powerMug = repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
 
-		val viewModelFactory = DetailViewModelFactory(powerMug!!)
-		viewModel = ViewModelProviders.of(this, viewModelFactory)
+		viewModel = ViewModelProviders.of(this, DetailViewModel.Factory(powerMug!!))
 			.get(DetailViewModel::class.java)
 
 		binding.viewModel = viewModel

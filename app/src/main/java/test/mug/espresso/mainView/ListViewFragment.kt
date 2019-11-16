@@ -20,20 +20,27 @@ import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.domain.PowerMugWithDistance
 
 class ListViewFragment : Fragment() {
-	private val viewModel: DataViewModel by lazy {
-		val activity = requireNotNull(this.activity) {
-			"You can only access the viewModel after onActivityCreated()"
-		}
-		activity.run {
-			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
-				.get(DataViewModel::class.java)
-		}
-	}
+	private lateinit var viewModel: DataViewModel
 
 	private var viewModelAdapter: ListViewAdapter? = null
 
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+		val binding: FragmentListViewBinding = DataBindingUtil.inflate(
+			inflater, R.layout.fragment_list_view, container, false
+		)
+
+		binding.setLifecycleOwner(viewLifecycleOwner)
+
+		val activity = requireNotNull(this.activity)
+		viewModel = activity.run {
+			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
+				.get(DataViewModel::class.java)
+		}
+
+		binding.viewModel = viewModel
 
 		viewModel.powerMugsWithDistance.observe(viewLifecycleOwner, Observer<List<PowerMugWithDistance>> { mugs ->
 			mugs?.apply {
@@ -49,19 +56,6 @@ class ListViewFragment : Fragment() {
 		})
 
 		viewModel.refreshDistance()
-	}
-
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View? {
-		val binding: FragmentListViewBinding = DataBindingUtil.inflate(
-			inflater, R.layout.fragment_list_view, container, false
-		)
-
-		binding.setLifecycleOwner(viewLifecycleOwner)
-
-		binding.viewModel = viewModel
 
 		viewModelAdapter = ListViewAdapter(PowerMugListener {
 			this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToDetailViewFragment(it))
