@@ -156,11 +156,10 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
 	}
 
-	private val markerClickListener = object : GoogleMap.OnMarkerClickListener {
-		override fun onMarkerClick(marker: Marker?): Boolean {
-			this@MapViewFragment.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
+	private val markerClickListener =
+		GoogleMap.OnMarkerClickListener { marker ->
+			this.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
 				marker!!.title.toLong()))
-			return true
+			true
 		}
-	}
 }
