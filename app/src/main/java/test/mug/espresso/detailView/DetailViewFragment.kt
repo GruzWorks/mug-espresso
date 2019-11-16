@@ -57,6 +57,13 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		binding.setLifecycleOwner(viewLifecycleOwner)
 
+		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(DetailViewFragmentDirections.actionDetailViewFragmentToAddViewFragment(powerMug.id))
+				viewModel.wentToAddView()
+			}
+		})
+
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)

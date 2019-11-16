@@ -31,6 +31,10 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 	val navigateToSecondView: LiveData<Boolean>
 		get() = _navigateToSecondView
 
+	private var _navigateToAddView = MutableLiveData<Boolean>()
+	val navigateToAddView: LiveData<Boolean>
+		get() = _navigateToAddView
+
 	/**
 	 * init{} is called immediately when this ViewModel is created.
 	 */
@@ -76,6 +80,14 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun wentToSecondView() {
 		_navigateToSecondView.value = false
+	}
+
+	fun goToAddView() {
+		_navigateToAddView.value = true
+	}
+
+	fun wentToAddView() {
+		_navigateToAddView.value = false
 	}
 
 	fun refreshDistance() {

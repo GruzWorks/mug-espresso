@@ -61,6 +61,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			}
 		})
 
+		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToAddViewFragment(-1))
+				viewModel.wentToAddView()
+			}
+		})
+
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
