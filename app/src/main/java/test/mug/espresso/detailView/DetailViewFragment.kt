@@ -38,8 +38,6 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var viewModel: DetailViewModel
 
-	private lateinit var fusedLocationClient: FusedLocationProviderClient
-
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
@@ -62,9 +60,6 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
-
-		fusedLocationClient =
-			LocationServices.getFusedLocationProviderClient(this.activity as Activity)
 
 		return binding.root
 	}
