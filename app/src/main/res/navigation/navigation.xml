@@ -33,7 +33,7 @@
 	<fragment
 		android:id="@+id/detailViewFragment"
 		android:name="test.mug.espresso.detailView.DetailViewFragment"
-		android:label="DetailViewFragment">
+		android:label="@string/detailsLabel">
 		<argument
 			android:name="selectedPlace"
 			app:argType="long" />
