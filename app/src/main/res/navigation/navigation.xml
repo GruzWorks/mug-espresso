@@ -16,6 +16,9 @@
 		<action
 			android:id="@+id/action_mapViewFragment_to_detailViewFragment"
 			app:destination="@id/detailViewFragment" />
+		<action
+			android:id="@+id/action_mapViewFragment_to_addViewFragment"
+			app:destination="@id/addViewFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/listViewFragment"
@@ -29,6 +32,9 @@
 		<action
 			android:id="@+id/action_listViewFragment_to_detailViewFragment"
 			app:destination="@+id/detailViewFragment" />
+		<action
+			android:id="@+id/action_listViewFragment_to_addViewFragment"
+			app:destination="@id/addViewFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/detailViewFragment"
@@ -38,10 +44,20 @@
 			android:name="selectedPlace"
 			app:argType="long" />
 		<action
-			android:id="@+id/action_detailViewFragment_to_mapViewFragment"
-			app:destination="@id/mapViewFragment" />
+			android:id="@+id/action_detailViewFragment_to_addViewFragment"
+			app:destination="@id/addViewFragment" />
+	</fragment>
+	<fragment
+		android:id="@+id/addViewFragment"
+		android:name="test.mug.espresso.addEditView.AddViewFragment"
+		android:label="@string/addEditLabel" >
+		<argument
+			android:name="selectedPlace"
+			app:argType="long" />
 		<action
-			android:id="@+id/action_detailViewFragment_to_listViewFragment"
-			app:destination="@id/listViewFragment" />
+			android:id="@+id/action_addViewFragment_to_mapViewFragment"
+			app:destination="@id/mapViewFragment"
+			app:popUpTo="@id/mapViewFragment"
+			app:popUpToInclusive="true" />
 	</fragment>
 </navigation>

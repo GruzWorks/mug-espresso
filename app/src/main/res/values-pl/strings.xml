@@ -4,5 +4,7 @@
 	<string name="detailsLabel">Szczegóły</string>
 	<string name="list_view">Lista</string>
 	<string name="map_view">Mapa</string>
+	<string name="no_of_mugs">Ilość dostępnych gniazdek:</string>
 	<string name="no_of_mugs_format">Ilość dostępnych gniazdek: %d</string>
+	<string name="addEditLabel">Dodaj/Edytuj punkt</string>
 </resources>
