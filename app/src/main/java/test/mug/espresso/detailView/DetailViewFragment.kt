@@ -82,7 +82,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		checkLocationPermission()
 		mMap.uiSettings.isZoomControlsEnabled = true
 
-		mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.id.toString()))
+		mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name))
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
 	}
