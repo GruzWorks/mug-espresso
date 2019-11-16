@@ -2,5 +2,6 @@
 	<string name="app_name">Project Thunderbolt</string>
 	<string name="map_view">Map View</string>
 	<string name="list_view">List View</string>
-	<string name="no_of_mugs_format">No of avalaible sockets: %d</string>
+	<string name="no_of_mugs_format">No of available sockets: %d</string>
+	<string name="detailsLabel">Details</string>
 </resources>
