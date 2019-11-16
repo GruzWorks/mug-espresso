@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context=".mainView.MapViewFragment">
+
+	<data>
+		<variable
+			name="viewModel"
+			type="test.mug.espresso.addEditView.AddViewModel" />
+	</data>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:fillViewport="true">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/ConstraintLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<fragment
+				android:id="@+id/map"
+				android:name="com.google.android.gms.maps.SupportMapFragment"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				app:layout_constraintBottom_toTopOf="@+id/ConstraintLayoutDetails"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/ConstraintLayoutDetails"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/map">
+
+				<TextView
+					android:id="@+id/pointName"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginTop="4dp"
+					android:layout_marginEnd="8dp"
+					android:layout_marginBottom="8dp"
+					android:text="@{viewModel.selectedPlace.name}"
+					android:textSize="22sp"
+					app:layout_constraintBottom_toTopOf="@+id/pointAddress"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintHorizontal_bias="0.0"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					tools:text="CH Unicornia" />
+
+				<TextView
+					android:id="@+id/pointAddress"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginBottom="8dp"
+					android:text="@{viewModel.selectedPlace.address}"
+					android:textSize="20sp"
+					app:layout_constraintBottom_toTopOf="@+id/pointNoOfMugs"
+					app:layout_constraintEnd_toStartOf="@+id/fabEditView"
+					app:layout_constraintHorizontal_bias="0.0"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/pointName"
+					tools:text="ul. Walecznych Pegazów 420, 69-911 Ziemniaków" />
+
+				<TextView
+					android:id="@+id/pointNoOfMugs"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginBottom="16dp"
+					android:text="@{@string/no_of_mugs_format(viewModel.selectedPlace.numberOfMugs)}"
+					android:textSize="20sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toStartOf="@+id/fabEditView"
+					app:layout_constraintHorizontal_bias="0.0"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/pointAddress"
+					tools:text="No of avalaible sockets: 10" />
+
+				<com.google.android.material.floatingactionbutton.FloatingActionButton
+					android:id="@+id/fabEditView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="16dp"
+					android:layout_marginBottom="16dp"
+					android:clickable="true"
+					android:focusable="true"
+					android:src="@android:drawable/ic_menu_edit"
+					android:tint="#202020"
+					app:backgroundTint="#F0F0F0"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintHorizontal_bias="1.0"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:layout_constraintVertical_bias="1.0" />
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+</layout>
