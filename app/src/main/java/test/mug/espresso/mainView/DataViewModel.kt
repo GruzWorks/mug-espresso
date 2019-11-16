@@ -80,7 +80,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun refreshDistance() {
 		powerMugsWithDistance.value?.forEach { item ->
-			item.distance = calculateDistance(lastLocation.value!!, item.point)
+			item.distance = calculateDistance(lastLocation.value ?: LatLng(0.0, 0.0), item.point)
 		}
 		powerMugsWithDistance.value?.sortedBy { it.distance }
 	}

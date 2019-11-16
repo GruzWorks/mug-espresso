@@ -34,26 +34,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-	private val viewModel: DataViewModel by lazy {
-		val activity = requireNotNull(this.activity) {
-			"You can only access the viewModel after onActivityCreated()"
-		}
-		activity.run {
-			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
-				.get(DataViewModel::class.java)
-		}
-	}
-
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
-
-		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
-			if (it == true) {
-				this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
-				viewModel.wentToSecondView()
-			}
-		})
-	}
+	private lateinit var viewModel: DataViewModel
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +46,20 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 		binding.setLifecycleOwner(viewLifecycleOwner)
 
+		val activity = requireNotNull(this.activity)
+		viewModel = activity.run {
+			ViewModelProviders.of(this, DataViewModel.Factory(activity.application))
+				.get(DataViewModel::class.java)
+		}
+
 		binding.viewModel = viewModel
+
+		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
+				viewModel.wentToSecondView()
+			}
+		})
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
