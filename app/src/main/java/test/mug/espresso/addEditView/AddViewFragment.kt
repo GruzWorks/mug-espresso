@@ -18,9 +18,11 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentAddViewBinding
+import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
@@ -76,7 +78,21 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 		checkLocationPermission()
 		mMap.uiSettings.isZoomControlsEnabled = true
 
-		mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name))
+		if (viewModel.selectedPlace.value == null) {
+			if (mMap.isMyLocationEnabled) {
+				fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
+					if (location != null) {
+						viewModel.lastLocation.value = LatLng(location.latitude, location.longitude)
+					} else {
+						viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
+					}
+				}
+			}
+
+			viewModel.selectedPlace.value = PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
+		}
+
+		viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
 	}

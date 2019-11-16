@@ -4,15 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import test.mug.espresso.domain.PowerMug
 
 class AddViewModel(powerMug: PowerMug?) : ViewModel() {
-	private val _selectedPlace = MutableLiveData<PowerMug?>()
-	val selectedPlace: LiveData<PowerMug?>
-		get() = _selectedPlace
+	var selectedPlace = MutableLiveData<PowerMug?>()
+
+	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
+
+	lateinit var currentMarker: Marker
 
 	init {
-		_selectedPlace.value = powerMug
+		selectedPlace.value = powerMug
 	}
 
 	class Factory(val powerMug: PowerMug?) : ViewModelProvider.Factory {
