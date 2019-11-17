@@ -38,13 +38,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var viewModel: DataViewModel
 
+	private lateinit var binding: FragmentMapViewBinding
+
 	private var markers = mutableListOf<Marker>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentMapViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_map_view, container, false
 		)
 

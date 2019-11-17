@@ -27,6 +27,7 @@ import test.mug.espresso.R
 import test.mug.espresso.ThreeState
 import test.mug.espresso.databinding.FragmentAddViewBinding
 import test.mug.espresso.domain.PowerMug
+import test.mug.espresso.repository.PowerMugRepository
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
@@ -39,15 +40,19 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+	private lateinit var binding: FragmentAddViewBinding
+
+	private lateinit var repository: PowerMugRepository
+
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentAddViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_add_view, container, false
 		)
 
-		val repository = getRepository(requireNotNull(activity).application)
+		repository = getRepository(requireNotNull(activity).application)
 
 		val powerMug =
 			repository.returnPlace(AddViewFragmentArgs.fromBundle(arguments!!).selectedPlace)

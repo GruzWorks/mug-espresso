@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
 import test.mug.espresso.ThreeState
 import test.mug.espresso.databinding.FragmentDetailViewBinding
+import test.mug.espresso.repository.PowerMugRepository
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
@@ -34,6 +35,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var currentMarker: Marker
 
+	private lateinit var repository: PowerMugRepository
+
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
@@ -42,7 +45,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 			inflater, R.layout.fragment_detail_view, container, false
 		)
 
-		val repository = getRepository(requireNotNull(activity).application)
+		repository = getRepository(requireNotNull(activity).application)
 
 		val powerMug =
 			repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)

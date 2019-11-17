@@ -18,13 +18,15 @@ import test.mug.espresso.domain.PowerMugWithDistance
 class ListViewFragment : Fragment() {
 	private lateinit var viewModel: DataViewModel
 
+	private lateinit var binding: FragmentListViewBinding
+
 	private var viewModelAdapter: ListViewAdapter? = null
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentListViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_list_view, container, false
 		)
 
