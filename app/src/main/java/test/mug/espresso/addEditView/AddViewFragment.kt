@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
+import test.mug.espresso.ThreeState
 import test.mug.espresso.databinding.FragmentAddViewBinding
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.getRepository
@@ -58,6 +59,19 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 
 		binding.lifecycleOwner = viewLifecycleOwner
 
+		viewModel.addedPlace.observe(viewLifecycleOwner, Observer { when (it) {
+			ThreeState.TRUE -> {
+				viewModel.addingHandled()
+				this.findNavController()
+					.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())}
+			ThreeState.FALSE -> {
+				viewModel.addingHandled()
+				Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
+					R.string.insert_update_error), Snackbar.LENGTH_LONG).show()
+			}
+			else -> {}
+		}})
+
 		viewModel.saveData.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
 				viewModel.selectedPlace.value!!.name = binding.pointNameInput.text.toString()
@@ -66,22 +80,12 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 					Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
 				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
 				binding.progressBar.visibility = View.VISIBLE
-
-				var res = false
-
 				if (viewModel.selectedPlace.value!!.id == -1L) {
-					res = viewModel.insertToDb()
+					viewModel.insertToDb()
 				} else {
-					res = viewModel.updateDb()
+					viewModel.updateDb()
 				}
-				if (res) {
-					viewModel.savedData()
-					this.findNavController()
-						.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
-				} else {
-					Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
-						R.string.insert_update_error), Snackbar.LENGTH_LONG).show()
-				}
+				viewModel.savedData()
 			}
 		})
 
