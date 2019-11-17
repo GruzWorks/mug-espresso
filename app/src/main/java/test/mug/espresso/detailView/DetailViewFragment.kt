@@ -26,6 +26,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var mMap: GoogleMap
 
+	private lateinit var binding: FragmentDetailViewBinding
+
 	private lateinit var viewModel: DetailViewModel
 
 	private lateinit var currentMarker: Marker
@@ -34,7 +36,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentDetailViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_detail_view, container, false
 		)
 
@@ -138,6 +140,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.delete_menu_button -> {
+			binding.progressBar.visibility = View.VISIBLE
 			viewModel.deletePlaceFromDb()
 			this.findNavController()
 				.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
