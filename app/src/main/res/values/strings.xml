@@ -10,4 +10,5 @@
 	<string name="no_of_mugs_format">No of available sockets: %d</string>
 	<string name="delete_menu_button">Delete place</string>
 	<string name="search_menu_button">Search</string>
+	<string name="no_results_error">No results</string>
 </resources>

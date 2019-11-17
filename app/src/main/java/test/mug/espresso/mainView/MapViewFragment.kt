@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentMapViewBinding
 import test.mug.espresso.domain.PowerMug
@@ -103,16 +104,10 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			moveToDefaultLocation()
 		}
 
-		viewModel.powerMugs.observe(viewLifecycleOwner, Observer<List<PowerMug>> { mugs ->
-			markers.forEach { item ->
-				item.remove()
-			}
-			val it = mugs.listIterator()
-			for (item in it) {
-				markers.add(mMap.addMarker(MarkerOptions().position(item.point).title(item.id.toString())))
-			}
-			mMap.setOnMarkerClickListener(markerClickListener)
-		})
+		if (viewModel.searchResults != null) {
+			viewModel.searchResults = null
+		}
+		viewModel.powerMugs.observe(viewLifecycleOwner, powerMugsObserver)
 	}
 
 	override fun onRequestPermissionsResult(
@@ -190,7 +185,33 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			override fun onQueryTextSubmit(query: String): Boolean {
 				Timber.i("onQueryTextSubmit: $query")
 
+				viewModel.powerMugs.removeObservers(viewLifecycleOwner)
+
 				viewModel.search(query)
+
+				viewModel.searchResults!!.observe(viewLifecycleOwner, Observer<List<PowerMug>> { mugs ->
+					markers.forEach { item ->
+						item.remove()
+					}
+					markers.clear()
+					val it = mugs.listIterator()
+					for (item in it) {
+						markers.add(mMap.addMarker(MarkerOptions().position(item.point).title(item.id.toString())))
+					}
+					mMap.setOnMarkerClickListener(markerClickListener)
+
+					if (markers.size > 0) {
+						mMap.animateCamera(
+							CameraUpdateFactory.newLatLngZoom(
+								markers[0].position,
+								15f
+							), 1000, null
+						)
+					} else {
+						Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
+													R.string.no_results_error), Snackbar.LENGTH_LONG).show()
+					}
+				})
 
 				return false
 			}
@@ -201,8 +222,29 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		}
 
 	private val closeListener =	SearchView.OnCloseListener {
-		Timber.i("onClose")
+		if (viewModel.searchResults?.hasObservers() == true) {
+			viewModel.searchResults!!.removeObservers(viewLifecycleOwner)
+		}
+		viewModel.searchResults = null
+
+		if (viewModel.powerMugs.hasObservers()) {
+			viewModel.powerMugs.removeObservers(viewLifecycleOwner)
+		}
+		viewModel.powerMugs.observe(viewLifecycleOwner, powerMugsObserver)
+
 		false
+	}
+
+	private val powerMugsObserver = Observer<List<PowerMug>> { mugs ->
+		markers.forEach { item ->
+			item.remove()
+		}
+		markers.clear()
+		val it = mugs.listIterator()
+		for (item in it) {
+			markers.add(mMap.addMarker(MarkerOptions().position(item.point).title(item.id.toString())))
+		}
+		mMap.setOnMarkerClickListener(markerClickListener)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

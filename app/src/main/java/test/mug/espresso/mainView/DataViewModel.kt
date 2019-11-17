@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import test.mug.espresso.calculateDistance
+import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.domain.PowerMugWithDistance
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
@@ -39,6 +40,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	var powerMugs = repository.powerMugs
+	var searchResults: LiveData<List<PowerMug>>? = null
 
 	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0, 0.0))
 
@@ -87,9 +89,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	fun search(query: String) {
-		viewModelScope.launch {
-			repository.search(query)
-		}
+		searchResults = repository.search(query)
 	}
 
 	class Factory(val app: Application) : ViewModelProvider.Factory {
