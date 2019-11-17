@@ -138,6 +138,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.delete_menu_button -> {
 			viewModel.deletePlaceFromDb()
+			this.findNavController().navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
 			true
 		}
 		else -> super.onOptionsItemSelected(item)

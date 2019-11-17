@@ -46,6 +46,9 @@
 		<action
 			android:id="@+id/action_detailViewFragment_to_addViewFragment"
 			app:destination="@id/addViewFragment" />
+		<action
+			android:id="@+id/action_detailViewFragment_to_mapViewFragment"
+			app:destination="@id/mapViewFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/addViewFragment"
