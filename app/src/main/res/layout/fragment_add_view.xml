@@ -5,6 +5,7 @@
 	tools:context=".mainView.MapViewFragment">
 
 	<data>
+
 		<variable
 			name="viewModel"
 			type="test.mug.espresso.addEditView.AddViewModel" />
@@ -139,6 +140,7 @@
 					android:layout_marginBottom="16dp"
 					android:clickable="true"
 					android:focusable="true"
+					android:onClick="@{() -> viewModel.saveData()}"
 					android:src="@android:drawable/ic_menu_send"
 					android:tint="#202020"
 					app:backgroundTint="#F0F0F0"
@@ -147,8 +149,7 @@
 					app:layout_constraintHorizontal_bias="1.0"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toTopOf="parent"
-					app:layout_constraintVertical_bias="1.0"
-					android:onClick="@{() -> viewModel.saveData()}" />
+					app:layout_constraintVertical_bias="1.0" />
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,7 +29,6 @@ import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
 class AddViewFragment : Fragment(), OnMapReadyCallback {
-
 	private val LOCATION_REQUEST_CODE: Int = 420
 
 	private lateinit var mMap: GoogleMap
@@ -48,20 +47,22 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 
 		val repository = getRepository(requireNotNull(activity).application)
 
-		val powerMug = repository.returnPlace(AddViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
+		val powerMug =
+			repository.returnPlace(AddViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
 
 		viewModel = ViewModelProviders.of(this, AddViewModel.Factory(repository, powerMug))
 			.get(AddViewModel::class.java)
 
 		binding.viewModel = viewModel
 
-		binding.setLifecycleOwner(viewLifecycleOwner)
+		binding.lifecycleOwner = viewLifecycleOwner
 
 		viewModel.saveData.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
 				viewModel.selectedPlace.value!!.name = binding.pointNameInput.text.toString()
 				viewModel.selectedPlace.value!!.address = binding.pointAddressInput.text.toString()
-				viewModel.selectedPlace.value!!.numberOfMugs = Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
+				viewModel.selectedPlace.value!!.numberOfMugs =
+					Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
 				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
 				binding.progressBar.visibility = View.VISIBLE
 				if (viewModel.selectedPlace.value!!.id == -1L) {
@@ -70,7 +71,8 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 					viewModel.updateDb()
 				}
 				viewModel.savedData()
-				this.findNavController().navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
+				this.findNavController()
+					.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
 			}
 		})
 
@@ -108,17 +110,30 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 					} else {
 						viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
 					}
-					viewModel.selectedPlace.value = PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
+					viewModel.selectedPlace.value =
+						PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
 
-					viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
+					viewModel.currentMarker =
+						mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
 
-					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 16f))
+					mMap.moveCamera(
+						CameraUpdateFactory.newLatLngZoom(
+							viewModel.selectedPlace.value!!.point,
+							16f
+						)
+					)
 				}
 			}
 		} else {
-			viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
+			viewModel.currentMarker =
+				mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
 
-			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 16f))
+			mMap.moveCamera(
+				CameraUpdateFactory.newLatLngZoom(
+					viewModel.selectedPlace.value!!.point,
+					16f
+				)
+			)
 		}
 		mMap.setOnMapClickListener(mapClickListener)
 	}

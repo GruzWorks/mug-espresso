@@ -8,15 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import test.mug.espresso.calculateDistance
-import test.mug.espresso.database.getDatabase
 import test.mug.espresso.domain.PowerMugWithDistance
-import test.mug.espresso.repository.PowerMugRepository
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 class DataViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -46,7 +40,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	var powerMugs = repository.powerMugs
 
-	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
+	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0, 0.0))
 
 	var powerMugsWithDistance = Transformations.map(powerMugs) { mugs ->
 		mugs.map { item ->

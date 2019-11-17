@@ -47,7 +47,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			inflater, R.layout.fragment_map_view, container, false
 		)
 
-		binding.setLifecycleOwner(viewLifecycleOwner)
+		binding.lifecycleOwner = viewLifecycleOwner
 
 		val activity = requireNotNull(this.activity)
 		viewModel = activity.run {
@@ -66,7 +66,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
-				this.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToAddViewFragment(-1))
+				this.findNavController()
+					.navigate(MapViewFragmentDirections.actionMapViewFragmentToAddViewFragment(-1))
 				viewModel.wentToAddView()
 			}
 		})
@@ -151,7 +152,12 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
 			if (location != null) {
 				viewModel.lastLocation.value = LatLng(location.latitude, location.longitude)
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 15f), 1000, null)
+				mMap.animateCamera(
+					CameraUpdateFactory.newLatLngZoom(
+						viewModel.lastLocation.value,
+						15f
+					), 1000, null
+				)
 			} else {
 				moveToDefaultLocation()
 			}
@@ -160,13 +166,20 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private fun moveToDefaultLocation() {
 		viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
+		mMap.animateCamera(
+			CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f),
+			1000,
+			null
+		)
 	}
 
 	private val markerClickListener =
 		GoogleMap.OnMarkerClickListener { marker ->
-			this.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
-				marker!!.title.toLong()))
+			this.findNavController().navigate(
+				MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
+					marker!!.title.toLong()
+				)
+			)
 			true
 		}
 }

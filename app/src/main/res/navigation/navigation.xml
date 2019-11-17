@@ -53,7 +53,7 @@
 	<fragment
 		android:id="@+id/addViewFragment"
 		android:name="test.mug.espresso.addEditView.AddViewFragment"
-		android:label="@string/add_edit_title" >
+		android:label="@string/add_edit_title">
 		<argument
 			android:name="selectedPlace"
 			app:argType="long" />

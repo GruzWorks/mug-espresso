@@ -5,6 +5,7 @@
 	tools:context=".ui.DevByteFragment">
 
 	<data>
+
 		<variable
 			name="viewModel"
 			type="test.mug.espresso.mainView.DataViewModel" />
@@ -46,12 +47,12 @@
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:onClick="@{() -> viewModel.goToSecondView()}"
 				android:text="@string/map_view"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toStartOf="@+id/buttonListView"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/recycler_view"
-				android:onClick="@{() -> viewModel.goToSecondView()}" />
+				app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
 
 			<Button
 				android:id="@+id/buttonListView"
@@ -72,6 +73,7 @@
 				android:layout_marginBottom="16dp"
 				android:clickable="true"
 				android:focusable="true"
+				android:onClick="@{() -> viewModel.goToAddView()}"
 				android:src="@android:drawable/ic_input_add"
 				android:tint="#202020"
 				app:backgroundTint="#F0F0F0"
@@ -80,8 +82,7 @@
 				app:layout_constraintHorizontal_bias="1.0"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintVertical_bias="1.0"
-				android:onClick="@{() -> viewModel.goToAddView()}" />
+				app:layout_constraintVertical_bias="1.0" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>

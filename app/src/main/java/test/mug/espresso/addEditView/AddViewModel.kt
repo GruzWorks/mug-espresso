@@ -20,7 +20,7 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 
 	var selectedPlace = MutableLiveData<PowerMug?>()
 
-	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
+	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0, 0.0))
 
 	private var _saveData = MutableLiveData<Boolean>()
 	val saveData: LiveData<Boolean>
@@ -57,7 +57,8 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 		viewModelJob.cancel()
 	}
 
-	class Factory(val repository: PowerMugRepository, val powerMug: PowerMug?) : ViewModelProvider.Factory {
+	class Factory(val repository: PowerMugRepository, val powerMug: PowerMug?) :
+		ViewModelProvider.Factory {
 		@Suppress("unchecked_cast")
 		override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 			if (modelClass.isAssignableFrom(AddViewModel::class.java)) {

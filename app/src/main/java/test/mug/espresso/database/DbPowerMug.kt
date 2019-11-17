@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import test.mug.espresso.domain.PowerMug
 
 @Entity(tableName = "PowerMugs")
-data class DbPowerMug (
+data class DbPowerMug(
 	@PrimaryKey(autoGenerate = true)
 	var id: Long = 0L,
 
@@ -26,7 +26,7 @@ data class DbPowerMug (
 	var numberOfMugs: Int
 )
 
-fun DbPowerMug.asDomainModel() : PowerMug {
+fun DbPowerMug.asDomainModel(): PowerMug {
 	return PowerMug(
 		id,
 		name,
@@ -42,7 +42,7 @@ fun List<DbPowerMug>.asDomainModel(): List<PowerMug> {
 	}
 }
 
-fun PowerMug.asDbModel() : DbPowerMug {
+fun PowerMug.asDbModel(): DbPowerMug {
 	return DbPowerMug(
 		id,
 		name,

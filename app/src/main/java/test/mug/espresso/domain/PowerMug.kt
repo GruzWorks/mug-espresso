@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PowerMug (
+data class PowerMug(
 	var id: Long = 0L,
 	var name: String,
 	var point: LatLng,

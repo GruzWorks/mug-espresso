@@ -1,7 +1,6 @@
 package test.mug.espresso.detailView
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
@@ -9,26 +8,16 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentDetailViewBinding
-import test.mug.espresso.databinding.FragmentMapViewBinding
-import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
@@ -51,19 +40,22 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		val repository = getRepository(requireNotNull(activity).application)
 
-		val powerMug = repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
+		val powerMug =
+			repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
 
 		viewModel = ViewModelProviders.of(this, DetailViewModel.Factory(repository, powerMug!!))
 			.get(DetailViewModel::class.java)
 
 		binding.viewModel = viewModel
 
-		binding.setLifecycleOwner(viewLifecycleOwner)
+		binding.lifecycleOwner = viewLifecycleOwner
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
 				currentMarker.remove()
-				this.findNavController().navigate(DetailViewFragmentDirections.actionDetailViewFragmentToAddViewFragment(powerMug.id))
+				this.findNavController().navigate(
+					DetailViewFragmentDirections.actionDetailViewFragmentToAddViewFragment(powerMug.id)
+				)
 				viewModel.wentToAddView()
 			}
 		})
@@ -93,9 +85,16 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		checkLocationPermission()
 		mMap.uiSettings.isZoomControlsEnabled = true
 
-		currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name))
+		currentMarker = mMap.addMarker(
+			MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name)
+		)
 
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
+		mMap.moveCamera(
+			CameraUpdateFactory.newLatLngZoom(
+				viewModel.selectedPlace.value!!.point,
+				13f
+			)
+		)
 	}
 
 	override fun onRequestPermissionsResult(
@@ -140,7 +139,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.delete_menu_button -> {
 			viewModel.deletePlaceFromDb()
-			this.findNavController().navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+			this.findNavController()
+				.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
 			true
 		}
 		else -> super.onOptionsItemSelected(item)

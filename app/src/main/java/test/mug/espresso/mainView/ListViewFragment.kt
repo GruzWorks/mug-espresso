@@ -1,7 +1,6 @@
 package test.mug.espresso.mainView
 
 import android.os.Bundle
-import android.os.ProxyFileDescriptorCallback
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentListViewBinding
 import test.mug.espresso.databinding.ListviewItemBinding
-import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.domain.PowerMugWithDistance
 
 class ListViewFragment : Fragment() {
@@ -32,7 +30,7 @@ class ListViewFragment : Fragment() {
 			inflater, R.layout.fragment_list_view, container, false
 		)
 
-		binding.setLifecycleOwner(viewLifecycleOwner)
+		binding.lifecycleOwner = viewLifecycleOwner
 
 		val activity = requireNotNull(this.activity)
 		viewModel = activity.run {
@@ -42,22 +40,26 @@ class ListViewFragment : Fragment() {
 
 		binding.viewModel = viewModel
 
-		viewModel.powerMugsWithDistance.observe(viewLifecycleOwner, Observer<List<PowerMugWithDistance>> { mugs ->
-			mugs?.apply {
-				viewModelAdapter?.powerMugs = mugs
-			}
-		})
+		viewModel.powerMugsWithDistance.observe(
+			viewLifecycleOwner,
+			Observer<List<PowerMugWithDistance>> { mugs ->
+				mugs?.apply {
+					viewModelAdapter?.powerMugs = mugs
+				}
+			})
 
 		viewModel.navigateToSecondView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
-				this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToMapViewFragment())
+				this.findNavController()
+					.navigate(ListViewFragmentDirections.actionListViewFragmentToMapViewFragment())
 				viewModel.wentToSecondView()
 			}
 		})
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
-				this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToAddViewFragment(-1))
+				this.findNavController()
+					.navigate(ListViewFragmentDirections.actionListViewFragmentToAddViewFragment(-1))
 				viewModel.wentToAddView()
 			}
 		})
@@ -65,7 +67,8 @@ class ListViewFragment : Fragment() {
 		viewModel.refreshDistance()
 
 		viewModelAdapter = ListViewAdapter(PowerMugListener {
-			this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToDetailViewFragment(it))
+			this.findNavController()
+				.navigate(ListViewFragmentDirections.actionListViewFragmentToDetailViewFragment(it))
 		})
 
 		binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
@@ -93,7 +96,8 @@ class ListViewAdapter(val callback: PowerMugListener) : RecyclerView.Adapter<Lis
 			LayoutInflater.from(parent.context),
 			ListViewViewHolder.LAYOUT,
 			parent,
-			false)
+			false
+		)
 		return ListViewViewHolder(withDataBinding)
 	}
 

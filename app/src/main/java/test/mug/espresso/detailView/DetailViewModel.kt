@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.PowerMugRepository
 
-class DetailViewModel(private val repository: PowerMugRepository, powerMug: PowerMug) : ViewModel() {
+class DetailViewModel(private val repository: PowerMugRepository, powerMug: PowerMug) :
+	ViewModel() {
 	private val viewModelJob = SupervisorJob()
 
 	private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -47,7 +48,8 @@ class DetailViewModel(private val repository: PowerMugRepository, powerMug: Powe
 		viewModelJob.cancel()
 	}
 
-	class Factory(val repository: PowerMugRepository, val powerMug: PowerMug) : ViewModelProvider.Factory {
+	class Factory(val repository: PowerMugRepository, val powerMug: PowerMug) :
+		ViewModelProvider.Factory {
 		@Suppress("unchecked_cast")
 		override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 			if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {

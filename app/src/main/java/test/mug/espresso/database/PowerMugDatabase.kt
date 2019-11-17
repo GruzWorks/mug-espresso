@@ -19,9 +19,11 @@ private lateinit var INSTANCE: PowerMugDatabase
 fun getDatabase(context: Context): PowerMugDatabase {
 	synchronized(PowerMugDatabase::class.java) {
 		if (!::INSTANCE.isInitialized) {
-			INSTANCE = Room.databaseBuilder(context.applicationContext,
+			INSTANCE = Room.databaseBuilder(
+				context.applicationContext,
 				PowerMugDatabase::class.java,
-				"PowerMugsDatabase").build()
+				"PowerMugsDatabase"
+			).build()
 		}
 	}
 
