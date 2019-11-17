@@ -35,6 +35,7 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 
 	suspend fun insertPlace(powerMug: PowerMug) {
 		Timber.i("Run insert place")
+		powerMug.id = 0
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.insert(powerMug.asDbModel())
 		}
