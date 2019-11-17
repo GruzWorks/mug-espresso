@@ -86,15 +86,19 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 					} else {
 						viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
 					}
+					viewModel.selectedPlace.value = PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
+
+					viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
+
+					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 16f))
 				}
 			}
+		} else {
+			viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
 
-			viewModel.selectedPlace.value = PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 16f))
 		}
-
-		viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
-
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
+		mMap.setOnMapClickListener(mapClickListener)
 	}
 
 	override fun onRequestPermissionsResult(
@@ -129,5 +133,10 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 				LOCATION_REQUEST_CODE
 			)
 		}
+	}
+
+	private val mapClickListener = GoogleMap.OnMapClickListener {
+		viewModel.currentMarker.remove()
+		viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(it))
 	}
 }
