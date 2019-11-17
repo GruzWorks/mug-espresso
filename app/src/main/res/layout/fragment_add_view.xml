@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context=".mainView.MapViewFragment">
+
+	<data>
+		<variable
+			name="viewModel"
+			type="test.mug.espresso.addEditView.AddViewModel" />
+	</data>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:fillViewport="true">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/ConstraintLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<fragment
+				android:id="@+id/map"
+				android:name="com.google.android.gms.maps.SupportMapFragment"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				app:layout_constraintBottom_toTopOf="@+id/ConstraintLayoutDetails"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/ConstraintLayoutDetails"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/map">
+
+				<TextView
+					android:id="@+id/pointNameLabel"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginTop="4dp"
+					android:layout_marginEnd="8dp"
+					android:text="@string/place_name_label"
+					android:textSize="20sp"
+					app:layout_constraintBottom_toTopOf="@+id/pointNameInput"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+
+				<EditText
+					android:id="@+id/pointNameInput"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginEnd="8dp"
+					android:layout_marginBottom="8dp"
+					android:autofillHints="no"
+					android:ems="10"
+					android:inputType="textShortMessage"
+					android:text="@{viewModel.selectedPlace.name}"
+					app:layout_constraintBottom_toTopOf="@+id/pointAddressLabel"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/pointNameLabel"
+					tools:text="CH Unicornia" />
+
+				<TextView
+					android:id="@+id/pointAddressLabel"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginEnd="8dp"
+					android:text="@string/place_address_label"
+					android:textSize="20sp"
+					app:layout_constraintBottom_toTopOf="@+id/pointAddressInput"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/pointNameInput" />
+
+				<EditText
+					android:id="@+id/pointAddressInput"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginEnd="8dp"
+					android:layout_marginBottom="8dp"
+					android:autofillHints="no"
+					android:ems="10"
+					android:inputType="textShortMessage"
+					android:text="@{viewModel.selectedPlace.address}"
+					app:layout_constraintBottom_toTopOf="@+id/pointNoOfMugsInput"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/pointAddressLabel"
+					tools:text="ul. Walecznych Pegazów 420, 69-911 Ziemniaków" />
+
+				<TextView
+					android:id="@+id/pointNoOfMugsLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_marginEnd="4dp"
+					android:text="@string/no_of_mugs_label"
+					android:textSize="20sp"
+					app:layout_constraintBottom_toBottomOf="@+id/pointNoOfMugsInput"
+					app:layout_constraintEnd_toStartOf="@+id/pointNoOfMugsInput"
+					app:layout_constraintHorizontal_bias="0.0"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="@+id/pointNoOfMugsInput" />
+
+				<EditText
+					android:id="@+id/pointNoOfMugsInput"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="4dp"
+					android:layout_marginEnd="8dp"
+					android:layout_marginBottom="16dp"
+					android:autofillHints="no"
+					android:ems="10"
+					android:inputType="number"
+					android:text="@{Long.toString(viewModel.selectedPlace.numberOfMugs)}"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toStartOf="@+id/fabEditView"
+					app:layout_constraintStart_toEndOf="@+id/pointNoOfMugsLabel"
+					app:layout_constraintTop_toBottomOf="@+id/pointAddressInput"
+					tools:text="10" />
+
+				<com.google.android.material.floatingactionbutton.FloatingActionButton
+					android:id="@+id/fabEditView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="16dp"
+					android:layout_marginBottom="16dp"
+					android:clickable="true"
+					android:focusable="true"
+					android:src="@android:drawable/ic_menu_send"
+					android:tint="#202020"
+					app:backgroundTint="#F0F0F0"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintHorizontal_bias="1.0"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:layout_constraintVertical_bias="1.0"
+					android:onClick="@{() -> viewModel.saveData()}" />
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+			<ProgressBar
+				android:id="@+id/progressBar"
+				style="?android:attr/progressBarStyle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:visibility="gone"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+</layout>

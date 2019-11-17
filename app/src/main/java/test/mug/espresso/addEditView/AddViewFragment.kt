@@ -1,4 +1,4 @@
-package test.mug.espresso.detailView
+package test.mug.espresso.addEditView
 
 import android.Manifest
 import android.app.Activity
@@ -11,8 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -23,54 +21,65 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
-import test.mug.espresso.databinding.FragmentDetailViewBinding
-import test.mug.espresso.databinding.FragmentMapViewBinding
+import test.mug.espresso.databinding.FragmentAddViewBinding
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
-class DetailViewFragment : Fragment(), OnMapReadyCallback {
+class AddViewFragment : Fragment(), OnMapReadyCallback {
+
 	private val LOCATION_REQUEST_CODE: Int = 420
 
 	private lateinit var mMap: GoogleMap
 
-	private lateinit var viewModel: DetailViewModel
+	private lateinit var viewModel: AddViewModel
 
-	private lateinit var currentMarker: Marker
+	private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentDetailViewBinding = DataBindingUtil.inflate(
-			inflater, R.layout.fragment_detail_view, container, false
+		val binding: FragmentAddViewBinding = DataBindingUtil.inflate(
+			inflater, R.layout.fragment_add_view, container, false
 		)
 
 		val repository = getRepository(requireNotNull(activity).application)
 
-		val powerMug = repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
+		val powerMug = repository.returnPlace(AddViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
 
-		viewModel = ViewModelProviders.of(this, DetailViewModel.Factory(powerMug!!))
-			.get(DetailViewModel::class.java)
+		viewModel = ViewModelProviders.of(this, AddViewModel.Factory(repository, powerMug))
+			.get(AddViewModel::class.java)
 
 		binding.viewModel = viewModel
 
 		binding.setLifecycleOwner(viewLifecycleOwner)
 
-		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
+		viewModel.saveData.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
-				currentMarker.remove()
-				this.findNavController().navigate(DetailViewFragmentDirections.actionDetailViewFragmentToAddViewFragment(powerMug.id))
-				viewModel.wentToAddView()
+				viewModel.selectedPlace.value!!.name = binding.pointNameInput.text.toString()
+				viewModel.selectedPlace.value!!.address = binding.pointAddressInput.text.toString()
+				viewModel.selectedPlace.value!!.numberOfMugs = Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
+				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
+				binding.progressBar.visibility = View.VISIBLE
+				if (viewModel.selectedPlace.value!!.id == -1L) {
+					viewModel.insertToDb()
+				} else {
+					viewModel.updateDb()
+				}
+				viewModel.savedData()
+				this.findNavController().navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
 			}
 		})
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
+
+		fusedLocationClient =
+			LocationServices.getFusedLocationProviderClient(this.activity as Activity)
 
 		return binding.root
 	}
@@ -89,9 +98,27 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		checkLocationPermission()
 		mMap.uiSettings.isZoomControlsEnabled = true
 
-		currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name))
+		if (viewModel.selectedPlace.value == null) {
+			if (mMap.isMyLocationEnabled) {
+				fusedLocationClient.lastLocation.addOnSuccessListener(this.activity as Activity) { location ->
+					if (location != null) {
+						viewModel.lastLocation.value = LatLng(location.latitude, location.longitude)
+					} else {
+						viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
+					}
+					viewModel.selectedPlace.value = PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
 
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
+					viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
+
+					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 16f))
+				}
+			}
+		} else {
+			viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point))
+
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 16f))
+		}
+		mMap.setOnMapClickListener(mapClickListener)
 	}
 
 	override fun onRequestPermissionsResult(
@@ -126,5 +153,10 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 				LOCATION_REQUEST_CODE
 			)
 		}
+	}
+
+	private val mapClickListener = GoogleMap.OnMapClickListener {
+		viewModel.currentMarker.remove()
+		viewModel.currentMarker = mMap.addMarker(MarkerOptions().position(it))
 	}
 }

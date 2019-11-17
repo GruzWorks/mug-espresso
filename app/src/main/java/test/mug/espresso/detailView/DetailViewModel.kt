@@ -11,8 +11,20 @@ class DetailViewModel(powerMug: PowerMug) : ViewModel() {
 	val selectedPlace: LiveData<PowerMug>
 		get() = _selectedPlace
 
+	private var _navigateToAddView = MutableLiveData<Boolean>()
+	val navigateToAddView: LiveData<Boolean>
+		get() = _navigateToAddView
+
 	init {
 		_selectedPlace.value = powerMug
+	}
+
+	fun goToAddView() {
+		_navigateToAddView.value = true
+	}
+
+	fun wentToAddView() {
+		_navigateToAddView.value = false
 	}
 
 	class Factory(val powerMug: PowerMug) : ViewModelProvider.Factory {

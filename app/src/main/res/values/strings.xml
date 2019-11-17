@@ -2,6 +2,10 @@
 	<string name="app_name">Project Thunderbolt</string>
 	<string name="map_view">Map View</string>
 	<string name="list_view">List View</string>
+	<string name="details_title">Details</string>
+	<string name="add_edit_title">Add/Edit place</string>
+	<string name="place_name_label">Place name:</string>
+	<string name="place_address_label">Place address:</string>
+	<string name="no_of_mugs_label">No of available sockets:</string>
 	<string name="no_of_mugs_format">No of available sockets: %d</string>
-	<string name="detailsLabel">Details</string>
 </resources>

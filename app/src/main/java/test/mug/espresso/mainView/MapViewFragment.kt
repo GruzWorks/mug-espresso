@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentMapViewBinding
+import test.mug.espresso.domain.PowerMug
 import timber.log.Timber
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
@@ -35,6 +36,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 	private lateinit var viewModel: DataViewModel
+
+	private var markers = mutableListOf<Marker>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +64,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			}
 		})
 
+		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToAddViewFragment(-1))
+				viewModel.wentToAddView()
+			}
+		})
+
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
@@ -83,7 +93,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		mMap = googleMap
 
 		checkLocationPermission()
-		mMap.uiSettings.isZoomControlsEnabled = true
 
 		if (mMap.isMyLocationEnabled) {
 			moveToUserLocation()
@@ -91,10 +100,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			moveToDefaultLocation()
 		}
 
-		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
+		viewModel.powerMugs.observe(viewLifecycleOwner, Observer<List<PowerMug>> { mugs ->
+			markers.forEach { item ->
+				item.remove()
+			}
 			val it = mugs.listIterator()
 			for (item in it) {
-				mMap.addMarker(item)
+				markers.add(mMap.addMarker(MarkerOptions().position(item.point).title(item.id.toString())))
 			}
 			mMap.setOnMarkerClickListener(markerClickListener)
 		})
@@ -151,11 +163,10 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f), 1000, null)
 	}
 
-	private val markerClickListener = object : GoogleMap.OnMarkerClickListener {
-		override fun onMarkerClick(marker: Marker?): Boolean {
-			this@MapViewFragment.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
+	private val markerClickListener =
+		GoogleMap.OnMarkerClickListener { marker ->
+			this.findNavController().navigate(MapViewFragmentDirections.actionMapViewFragmentToDetailViewFragment(
 				marker!!.title.toLong()))
-			return true
+			true
 		}
-	}
 }

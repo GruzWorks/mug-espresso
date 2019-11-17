@@ -55,6 +55,13 @@ class ListViewFragment : Fragment() {
 			}
 		})
 
+		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				this.findNavController().navigate(ListViewFragmentDirections.actionListViewFragmentToAddViewFragment(-1))
+				viewModel.wentToAddView()
+			}
+		})
+
 		viewModel.refreshDistance()
 
 		viewModelAdapter = ListViewAdapter(PowerMugListener {

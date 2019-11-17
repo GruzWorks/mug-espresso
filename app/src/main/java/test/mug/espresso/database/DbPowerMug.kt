@@ -41,3 +41,14 @@ fun List<DbPowerMug>.asDomainModel(): List<PowerMug> {
 		it.asDomainModel()
 	}
 }
+
+fun PowerMug.asDbModel() : DbPowerMug {
+	return DbPowerMug(
+		id,
+		name,
+		point.latitude,
+		point.longitude,
+		address,
+		numberOfMugs
+	)
+}
