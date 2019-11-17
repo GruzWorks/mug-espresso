@@ -13,10 +13,22 @@ class AddViewModel(powerMug: PowerMug?) : ViewModel() {
 
 	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
 
+	private var _saveData = MutableLiveData<Boolean>()
+	val saveData: LiveData<Boolean>
+		get() = _saveData
+
 	lateinit var currentMarker: Marker
 
 	init {
 		selectedPlace.value = powerMug
+	}
+
+	fun saveData() {
+		_saveData.value = true
+	}
+
+	fun savedData() {
+		_saveData.value = false
 	}
 
 	class Factory(val powerMug: PowerMug?) : ViewModelProvider.Factory {

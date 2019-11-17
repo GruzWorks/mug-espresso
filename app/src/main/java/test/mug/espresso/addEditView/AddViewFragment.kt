@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -53,6 +54,23 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 		binding.viewModel = viewModel
 
 		binding.setLifecycleOwner(viewLifecycleOwner)
+
+		viewModel.saveData.observe(viewLifecycleOwner, Observer {
+			if (it == true) {
+				viewModel.selectedPlace.value!!.name = binding.pointNameInput.text.toString()
+				viewModel.selectedPlace.value!!.address = binding.pointAddressInput.text.toString()
+				viewModel.selectedPlace.value!!.numberOfMugs = Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
+				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
+				Timber.i(viewModel.selectedPlace.value!!.id.toString())
+				Timber.i(viewModel.selectedPlace.value!!.name)
+				Timber.i(viewModel.selectedPlace.value!!.address)
+				Timber.i(viewModel.selectedPlace.value!!.numberOfMugs.toString())
+				Timber.i(viewModel.selectedPlace.value!!.point.longitude.toString())
+				Timber.i(viewModel.selectedPlace.value!!.point.latitude.toString())
+				//this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
+				viewModel.savedData()
+			}
+		})
 
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
