@@ -47,10 +47,6 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 
 	var powerMugs = repository.powerMugs
 
-	var markers = Transformations.map(powerMugs) {
-		it.asMarkerOptions()
-	}
-
 	var lastLocation = MutableLiveData<LatLng>(LatLng(0.0,0.0))
 
 	var powerMugsWithDistance = Transformations.map(powerMugs) { mugs ->

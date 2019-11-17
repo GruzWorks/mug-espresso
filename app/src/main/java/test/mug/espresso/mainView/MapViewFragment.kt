@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentMapViewBinding
+import test.mug.espresso.domain.PowerMug
 import timber.log.Timber
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
@@ -99,13 +100,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			moveToDefaultLocation()
 		}
 
-		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
+		viewModel.powerMugs.observe(viewLifecycleOwner, Observer<List<PowerMug>> { mugs ->
 			markers.forEach { item ->
 				item.remove()
 			}
 			val it = mugs.listIterator()
 			for (item in it) {
-				markers.add(mMap.addMarker(item))
+				markers.add(mMap.addMarker(MarkerOptions().position(item.point).title(item.id.toString())))
 			}
 			mMap.setOnMarkerClickListener(markerClickListener)
 		})
