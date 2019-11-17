@@ -65,6 +65,8 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 		binding.lifecycleOwner = viewLifecycleOwner
 
 		viewModel.addedPlace.observe(viewLifecycleOwner, Observer {
+			binding.progressBar.visibility = View.GONE
+
 			when (it) {
 				ThreeState.TRUE -> {
 					viewModel.addingHandled()

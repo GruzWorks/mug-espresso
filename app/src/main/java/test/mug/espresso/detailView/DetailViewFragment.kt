@@ -58,6 +58,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		binding.lifecycleOwner = viewLifecycleOwner
 
 		viewModel.deletedPlace.observe(viewLifecycleOwner, Observer {
+			binding.progressBar.visibility = View.GONE
+
 			when (it) {
 				ThreeState.TRUE -> {
 					viewModel.deletionHandled()
