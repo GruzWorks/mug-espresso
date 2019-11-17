@@ -40,7 +40,7 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 
 	fun insertToDb() {
 		viewModelScope.launch {
-			//repository.refreshCache()
+			repository.insertPlace(selectedPlace.value!!)
 		}
 	}
 

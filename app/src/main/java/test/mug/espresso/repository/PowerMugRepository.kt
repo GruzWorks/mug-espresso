@@ -33,6 +33,13 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		}
 	}
 
+	suspend fun insertPlace(powerMug: PowerMug) {
+		Timber.i("Run insert place")
+		withContext(Dispatchers.IO) {
+			database.powerMugDatabaseDao.insert(powerMug.asDbModel())
+		}
+	}
+
 	fun returnPlace(key: Long) : PowerMug? {
 		for (item in powerMugs.value!!) {
 			if (item.id == key) {
