@@ -36,6 +36,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var viewModel: DataViewModel
 
+	private var markers = mutableListOf<Marker>()
+
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
@@ -98,9 +100,12 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		}
 
 		viewModel.markers.observe(viewLifecycleOwner, Observer<List<MarkerOptions>> { mugs ->
+			markers.forEach { item ->
+				item.remove()
+			}
 			val it = mugs.listIterator()
 			for (item in it) {
-				mMap.addMarker(item)
+				markers.add(mMap.addMarker(item))
 			}
 			mMap.setOnMarkerClickListener(markerClickListener)
 		})
