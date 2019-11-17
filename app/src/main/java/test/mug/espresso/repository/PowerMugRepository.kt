@@ -17,7 +17,7 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 	}
 
 	suspend fun refreshCache() {
-		Timber.i("Run refresh cache")
+		Timber.v("Run refresh cache")
 		withContext(Dispatchers.IO) {
 //			for (i in 0..39) {
 //				createRandomEntryNearWroclaw()
@@ -27,16 +27,24 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 	}
 
 	suspend fun updatePlace(powerMug: PowerMug) {
-		Timber.i("Run update place")
+		Timber.v("Run update place")
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.update(powerMug.asDbModel())
 		}
 	}
 
 	suspend fun insertPlace(powerMug: PowerMug) {
-		Timber.i("Run insert place")
+		Timber.v("Run insert place")
+		powerMug.id = 0
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.insert(powerMug.asDbModel())
+		}
+	}
+
+	suspend fun deletePlace(powerMug: PowerMug) {
+		Timber.v("Run delete place")
+		withContext(Dispatchers.IO) {
+			database.powerMugDatabaseDao.delete(powerMug.asDbModel())
 		}
 	}
 

@@ -9,4 +9,5 @@
 	<string name="place_address_label">Adres obiektu:</string>
 	<string name="no_of_mugs_label">Ilość dostępnych gniazdek:</string>
 	<string name="no_of_mugs_format">Ilość dostępnych gniazdek: %d</string>
+	<string name="delete_menu_button">Usuń obiekt</string>
 </resources>

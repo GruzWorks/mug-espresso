@@ -1,10 +1,7 @@
 package test.mug.espresso.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface PowerMugDatabaseDao {
@@ -13,6 +10,9 @@ interface PowerMugDatabaseDao {
 
 	@Update
 	fun update(place: DbPowerMug)
+
+	@Delete
+	fun delete(place: DbPowerMug)
 
 	@Query("SELECT * FROM PowerMugs WHERE id = :key")
 	fun get(key: Long): DbPowerMug?
