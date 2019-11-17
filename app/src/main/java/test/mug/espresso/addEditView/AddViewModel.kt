@@ -32,16 +32,20 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 		selectedPlace.value = powerMug
 	}
 
-	fun updateDb() {
+	fun updateDb() : Boolean {
+		var res = false
 		viewModelScope.launch {
-			repository.updatePlace(selectedPlace.value!!)
+			res = repository.updatePlace(selectedPlace.value!!)
 		}
+		return res
 	}
 
-	fun insertToDb() {
+	fun insertToDb() : Boolean {
+		var res = false
 		viewModelScope.launch {
-			repository.insertPlace(selectedPlace.value!!)
+			res = repository.insertPlace(selectedPlace.value!!)
 		}
+		return res
 	}
 
 	fun saveData() {

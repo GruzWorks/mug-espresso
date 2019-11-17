@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.PowerMugRepository
 
@@ -25,6 +22,10 @@ class DetailViewModel(private val repository: PowerMugRepository, powerMug: Powe
 	val navigateToAddView: LiveData<Boolean>
 		get() = _navigateToAddView
 
+	private var _deletedPlace = MutableLiveData<Boolean>()
+	val deletedPlace: LiveData<Boolean>
+		get() = _deletedPlace
+
 	init {
 		_selectedPlace.value = powerMug
 	}
@@ -37,9 +38,9 @@ class DetailViewModel(private val repository: PowerMugRepository, powerMug: Powe
 		_navigateToAddView.value = false
 	}
 
-	fun deletePlaceFromDb() {
+	fun deletePlaceFromDb() : Boolean {
 		viewModelScope.launch {
-			repository.deletePlace(selectedPlace.value!!)
+			_deletedPlace.value = repository.deletePlace(selectedPlace.value!!)
 		}
 	}
 

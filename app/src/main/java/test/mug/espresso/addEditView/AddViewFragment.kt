@@ -22,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentAddViewBinding
 import test.mug.espresso.domain.PowerMug
@@ -65,14 +66,22 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 					Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
 				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
 				binding.progressBar.visibility = View.VISIBLE
+
+				var res = false
+
 				if (viewModel.selectedPlace.value!!.id == -1L) {
-					viewModel.insertToDb()
+					res = viewModel.insertToDb()
 				} else {
-					viewModel.updateDb()
+					res = viewModel.updateDb()
 				}
-				viewModel.savedData()
-				this.findNavController()
-					.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
+				if (res) {
+					viewModel.savedData()
+					this.findNavController()
+						.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
+				} else {
+					Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
+						R.string.insert_update_error), Snackbar.LENGTH_LONG).show()
+				}
 			}
 		})
 

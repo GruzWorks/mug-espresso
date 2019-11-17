@@ -25,3 +25,9 @@ fun calculateDistance(pointA: LatLng, pointB: LatLng): Double {
 fun degreesToRadians(degrees: Double): Double {
 	return degrees * Math.PI / 180
 }
+
+enum class ThreeState {
+	TRUE,
+	FALSE,
+	TRALSE
+}

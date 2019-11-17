@@ -27,26 +27,29 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		}
 	}
 
-	suspend fun updatePlace(powerMug: PowerMug) {
+	suspend fun updatePlace(powerMug: PowerMug) : Boolean {
 		Timber.v("Run update place")
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.update(powerMug.asDbModel())
 		}
+		return true
 	}
 
-	suspend fun insertPlace(powerMug: PowerMug) {
+	suspend fun insertPlace(powerMug: PowerMug) : Boolean {
 		Timber.v("Run insert place")
 		powerMug.id = 0
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.insert(powerMug.asDbModel())
 		}
+		return true
 	}
 
-	suspend fun deletePlace(powerMug: PowerMug) {
+	suspend fun deletePlace(powerMug: PowerMug) : Boolean {
 		Timber.v("Run delete place")
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.delete(powerMug.asDbModel())
 		}
+		return true
 	}
 
 	fun search(query: String) : LiveData<List<PowerMug>> {

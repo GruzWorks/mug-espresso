@@ -16,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentDetailViewBinding
 import test.mug.espresso.repository.getRepository
@@ -141,9 +142,14 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.delete_menu_button -> {
 			binding.progressBar.visibility = View.VISIBLE
-			viewModel.deletePlaceFromDb()
-			this.findNavController()
-				.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+			var res = viewModel.deletePlaceFromDb()
+			if (res) {
+				this.findNavController()
+					.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+			} else {
+				Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
+					R.string.delete_error), Snackbar.LENGTH_LONG).show()
+			}
 			true
 		}
 		else -> super.onOptionsItemSelected(item)
