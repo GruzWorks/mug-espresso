@@ -1,9 +1,7 @@
 package test.mug.espresso.mainView
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -76,7 +74,14 @@ class ListViewFragment : Fragment() {
 			adapter = viewModelAdapter
 		}
 
+		setHasOptionsMenu(true)
+
 		return binding.root
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.menu_main_view, menu)
 	}
 }
 

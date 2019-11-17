@@ -1,12 +1,12 @@
 package test.mug.espresso.mainView
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -78,6 +78,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 		fusedLocationClient =
 			LocationServices.getFusedLocationProviderClient(this.activity as Activity)
+
+		setHasOptionsMenu(true)
 
 		return binding.root
 	}
@@ -182,4 +184,31 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			)
 			true
 		}
+
+	private val queryTextListener =
+		object : SearchView.OnQueryTextListener {
+			override fun onQueryTextSubmit(query: String?): Boolean {
+				return false
+			}
+
+			override fun onQueryTextChange(newText: String): Boolean {
+				Timber.i("onQueryTextChange: %s", newText)
+				return true
+			}
+		}
+
+	private val closeListener =	SearchView.OnCloseListener {
+		Timber.i("onClose")
+		false
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.menu_main_view, menu)
+
+		val searchView = menu.findItem(R.id.search_menu_button).actionView as SearchView
+
+		searchView.setOnQueryTextListener(queryTextListener)
+		searchView.setOnCloseListener(closeListener)
+	}
 }
