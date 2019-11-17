@@ -1,9 +1,7 @@
 package test.mug.espresso.mainView
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -40,6 +38,7 @@ class ListViewFragment : Fragment() {
 
 		binding.viewModel = viewModel
 
+		viewModel.powerMugs.observe(viewLifecycleOwner, Observer{})
 		viewModel.powerMugsWithDistance.observe(
 			viewLifecycleOwner,
 			Observer<List<PowerMugWithDistance>> { mugs ->

@@ -92,7 +92,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		mMap.moveCamera(
 			CameraUpdateFactory.newLatLngZoom(
 				viewModel.selectedPlace.value!!.point,
-				13f
+				15f
 			)
 		)
 	}

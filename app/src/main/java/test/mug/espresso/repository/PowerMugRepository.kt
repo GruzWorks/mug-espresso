@@ -49,6 +49,15 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		}
 	}
 
+	fun search(query: String) : LiveData<List<PowerMug>> {
+		@Suppress("NAME_SHADOWING")
+		val query = "%$query%"
+		Timber.v("Run search place: $query")
+		return Transformations.map(database.powerMugDatabaseDao.searchFor(query)) {
+			it.asDomainModel()
+		}
+	}
+
 	fun returnPlace(key: Long): PowerMug? {
 		for (item in powerMugs.value!!) {
 			if (item.id == key) {

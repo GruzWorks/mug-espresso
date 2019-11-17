@@ -10,4 +10,6 @@
 	<string name="no_of_mugs_label">Ilość dostępnych gniazdek:</string>
 	<string name="no_of_mugs_format">Ilość dostępnych gniazdek: %d</string>
 	<string name="delete_menu_button">Usuń obiekt</string>
+	<string name="search_menu_button">Szukaj</string>
+	<string name="no_results_error">Brak wyników</string>
 </resources>
