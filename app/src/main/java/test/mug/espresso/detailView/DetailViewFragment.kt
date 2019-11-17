@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import test.mug.espresso.R
 import test.mug.espresso.databinding.FragmentDetailViewBinding
@@ -37,6 +38,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 	private lateinit var mMap: GoogleMap
 
 	private lateinit var viewModel: DetailViewModel
+
+	private lateinit var currentMarker: Marker
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +62,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
+				currentMarker.remove()
 				this.findNavController().navigate(DetailViewFragmentDirections.actionDetailViewFragmentToAddViewFragment(powerMug.id))
 				viewModel.wentToAddView()
 			}
@@ -85,7 +89,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		checkLocationPermission()
 		mMap.uiSettings.isZoomControlsEnabled = true
 
-		mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name))
+		currentMarker = mMap.addMarker(MarkerOptions().position(viewModel.selectedPlace.value!!.point).title(viewModel.selectedPlace.value!!.name))
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.selectedPlace.value!!.point, 13f))
 	}
