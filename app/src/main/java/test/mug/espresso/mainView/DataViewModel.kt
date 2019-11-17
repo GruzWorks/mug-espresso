@@ -41,7 +41,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 		viewModelScope.launch {
 			repository.refreshCache()
 		}
-		Timber.i("ViewModelCreated")
+		Timber.v("DataViewModel Created")
 	}
 
 	var powerMugs = repository.powerMugs

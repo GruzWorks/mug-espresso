@@ -74,6 +74,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		setHasOptionsMenu(true)
 
+		Timber.v("Selected item id: %s", powerMug.id.toString())
+
 		return binding.root
 	}
 

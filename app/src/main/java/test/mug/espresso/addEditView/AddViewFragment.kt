@@ -81,6 +81,8 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 		fusedLocationClient =
 			LocationServices.getFusedLocationProviderClient(this.activity as Activity)
 
+		Timber.v("Selected item id: %s", powerMug?.id.toString())
+
 		return binding.root
 	}
 
