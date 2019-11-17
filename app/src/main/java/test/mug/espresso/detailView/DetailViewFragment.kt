@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
+import test.mug.espresso.ThreeState
 import test.mug.espresso.databinding.FragmentDetailViewBinding
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
@@ -52,6 +53,20 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		binding.viewModel = viewModel
 
 		binding.lifecycleOwner = viewLifecycleOwner
+
+		viewModel.deletedPlace.observe(viewLifecycleOwner, Observer { when(it) {
+			ThreeState.TRUE -> {
+				viewModel.deletionHandled()
+				this.findNavController()
+					.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+			}
+			ThreeState.FALSE -> {
+				viewModel.deletionHandled()
+				Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
+					R.string.delete_error), Snackbar.LENGTH_LONG).show()
+			}
+			else -> {}
+		}})
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
@@ -142,14 +157,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.delete_menu_button -> {
 			binding.progressBar.visibility = View.VISIBLE
-			var res = viewModel.deletePlaceFromDb()
-			if (res) {
-				this.findNavController()
-					.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
-			} else {
-				Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
-					R.string.delete_error), Snackbar.LENGTH_LONG).show()
-			}
+			viewModel.deletePlaceFromDb()
 			true
 		}
 		else -> super.onOptionsItemSelected(item)

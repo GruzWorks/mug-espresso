@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.PowerMugRepository
+import test.mug.espresso.ThreeState
 
 class DetailViewModel(private val repository: PowerMugRepository, powerMug: PowerMug) :
 	ViewModel() {
@@ -22,8 +23,8 @@ class DetailViewModel(private val repository: PowerMugRepository, powerMug: Powe
 	val navigateToAddView: LiveData<Boolean>
 		get() = _navigateToAddView
 
-	private var _deletedPlace = MutableLiveData<Boolean>()
-	val deletedPlace: LiveData<Boolean>
+	private var _deletedPlace = MutableLiveData<ThreeState>(ThreeState.TRALSE)
+	val deletedPlace: LiveData<ThreeState>
 		get() = _deletedPlace
 
 	init {
@@ -38,10 +39,18 @@ class DetailViewModel(private val repository: PowerMugRepository, powerMug: Powe
 		_navigateToAddView.value = false
 	}
 
-	fun deletePlaceFromDb() : Boolean {
+	fun deletePlaceFromDb() {
 		viewModelScope.launch {
-			_deletedPlace.value = repository.deletePlace(selectedPlace.value!!)
+			if(repository.deletePlace(selectedPlace.value!!)) {
+				_deletedPlace.value = ThreeState.TRUE
+			} else {
+				_deletedPlace.value = ThreeState.FALSE
+			}
 		}
+	}
+
+	fun deletionHandled() {
+		_deletedPlace.value = ThreeState.TRALSE
 	}
 
 	override fun onCleared() {
