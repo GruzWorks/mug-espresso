@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import test.mug.espresso.database.DbPowerMug
-import test.mug.espresso.database.PowerMugDatabase
-import test.mug.espresso.database.asDomainModel
-import test.mug.espresso.database.getDatabase
+import test.mug.espresso.database.*
 import test.mug.espresso.domain.PowerMug
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -29,10 +26,17 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		}
 	}
 
+	suspend fun updatePlace(powerMug: PowerMug) {
+		Timber.i("Run update place")
+		withContext(Dispatchers.IO) {
+			database.powerMugDatabaseDao.update(powerMug.asDbModel())
+		}
+	}
+
 	fun returnPlace(key: Long) : PowerMug? {
 		for (item in powerMugs.value!!) {
 			if (item.id == key) {
-				return item
+				return item//.copy()
 			}
 		}
 		return null

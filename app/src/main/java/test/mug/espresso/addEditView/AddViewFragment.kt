@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -28,6 +29,7 @@ import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
 class AddViewFragment : Fragment(), OnMapReadyCallback {
+
 	private val LOCATION_REQUEST_CODE: Int = 420
 
 	private lateinit var mMap: GoogleMap
@@ -48,7 +50,7 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 
 		val powerMug = repository.returnPlace(AddViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
 
-		viewModel = ViewModelProviders.of(this, AddViewModel.Factory(powerMug))
+		viewModel = ViewModelProviders.of(this, AddViewModel.Factory(repository, powerMug))
 			.get(AddViewModel::class.java)
 
 		binding.viewModel = viewModel
@@ -61,14 +63,14 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 				viewModel.selectedPlace.value!!.address = binding.pointAddressInput.text.toString()
 				viewModel.selectedPlace.value!!.numberOfMugs = Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
 				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
-				Timber.i(viewModel.selectedPlace.value!!.id.toString())
-				Timber.i(viewModel.selectedPlace.value!!.name)
-				Timber.i(viewModel.selectedPlace.value!!.address)
-				Timber.i(viewModel.selectedPlace.value!!.numberOfMugs.toString())
-				Timber.i(viewModel.selectedPlace.value!!.point.longitude.toString())
-				Timber.i(viewModel.selectedPlace.value!!.point.latitude.toString())
-				//this.findNavController().navigate(R.id.action_mapViewFragment_to_listViewFragment)
+				binding.progressBar.visibility = View.VISIBLE
+				if (viewModel.selectedPlace.value!!.id == -1L) {
+					viewModel.insertToDb()
+				} else {
+					viewModel.updateDb()
+				}
 				viewModel.savedData()
+				this.findNavController().navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
 			}
 		})
 

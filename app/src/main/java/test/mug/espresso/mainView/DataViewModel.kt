@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import test.mug.espresso.calculateDistance
 import test.mug.espresso.database.getDatabase
 import test.mug.espresso.domain.PowerMugWithDistance
-import test.mug.espresso.domain.asMarkerOptions
 import test.mug.espresso.repository.PowerMugRepository
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
