@@ -4,9 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,7 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -53,7 +53,7 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		val powerMug = repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
 
-		viewModel = ViewModelProviders.of(this, DetailViewModel.Factory(powerMug!!))
+		viewModel = ViewModelProviders.of(this, DetailViewModel.Factory(repository, powerMug!!))
 			.get(DetailViewModel::class.java)
 
 		binding.viewModel = viewModel
@@ -71,6 +71,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		val mapFragment = childFragmentManager
 			.findFragmentById(R.id.map) as SupportMapFragment
 		mapFragment.getMapAsync(this)
+
+		setHasOptionsMenu(true)
 
 		return binding.root
 	}
@@ -126,5 +128,18 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 				LOCATION_REQUEST_CODE
 			)
 		}
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.menu_detail_view, menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+		R.id.delete_menu_button -> {
+			viewModel.deletePlaceFromDb()
+			true
+		}
+		else -> super.onOptionsItemSelected(item)
 	}
 }

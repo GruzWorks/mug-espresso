@@ -8,4 +8,5 @@
 	<string name="place_address_label">Place address:</string>
 	<string name="no_of_mugs_label">No of available sockets:</string>
 	<string name="no_of_mugs_format">No of available sockets: %d</string>
+	<string name="delete_menu_button">Delete place</string>
 </resources>

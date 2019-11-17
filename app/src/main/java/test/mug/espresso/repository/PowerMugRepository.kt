@@ -40,6 +40,13 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		}
 	}
 
+	suspend fun deletePlace(powerMug: PowerMug) {
+		Timber.i("Run delete place")
+		withContext(Dispatchers.IO) {
+			database.powerMugDatabaseDao.delete(powerMug.asDbModel())
+		}
+	}
+
 	fun returnPlace(key: Long) : PowerMug? {
 		for (item in powerMugs.value!!) {
 			if (item.id == key) {
