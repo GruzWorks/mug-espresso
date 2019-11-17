@@ -167,7 +167,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 	private fun moveToDefaultLocation() {
 		viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
 		mMap.animateCamera(
-			CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 13f),
+			CameraUpdateFactory.newLatLngZoom(viewModel.lastLocation.value, 15f),
 			1000,
 			null
 		)
