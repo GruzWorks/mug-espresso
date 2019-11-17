@@ -27,7 +27,7 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 	val saveData: LiveData<Boolean>
 		get() = _saveData
 
-	private var _addedPlace = MutableLiveData<ThreeState>(ThreeState.TRALSE)
+	private var _addedPlace = MutableLiveData<ThreeState>(ThreeState.UNSET)
 	val addedPlace: LiveData<ThreeState>
 		get() = _addedPlace
 
@@ -58,7 +58,7 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 	}
 
 	fun addingHandled() {
-		_addedPlace.value = ThreeState.TRALSE
+		_addedPlace.value = ThreeState.UNSET
 	}
 
 	fun saveData() {

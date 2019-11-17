@@ -29,9 +29,6 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 	val navigateToAddView: LiveData<Boolean>
 		get() = _navigateToAddView
 
-	/**
-	 * init{} is called immediately when this ViewModel is created.
-	 */
 	init {
 		viewModelScope.launch {
 			repository.refreshCache()
@@ -57,9 +54,6 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 		}.sortedBy { it.distance }
 	}
 
-	/**
-	 * Cancel all coroutines when the ViewModel is cleared
-	 */
 	override fun onCleared() {
 		super.onCleared()
 		viewModelJob.cancel()

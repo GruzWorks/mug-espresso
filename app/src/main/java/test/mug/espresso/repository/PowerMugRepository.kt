@@ -20,14 +20,14 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 	suspend fun refreshCache() {
 		Timber.v("Run refresh cache")
 		withContext(Dispatchers.IO) {
-//			for (i in 0..39) {
+			//			for (i in 0..39) {
 //				createRandomEntryNearWroclaw()
 //				createRandomEntryNearWarsaw()
 //			}
 		}
 	}
 
-	suspend fun updatePlace(powerMug: PowerMug) : Boolean {
+	suspend fun updatePlace(powerMug: PowerMug): Boolean {
 		Timber.v("Run update place")
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.update(powerMug.asDbModel())
@@ -35,7 +35,7 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		return true
 	}
 
-	suspend fun insertPlace(powerMug: PowerMug) : Boolean {
+	suspend fun insertPlace(powerMug: PowerMug): Boolean {
 		Timber.v("Run insert place")
 		powerMug.id = 0
 		withContext(Dispatchers.IO) {
@@ -44,7 +44,7 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		return true
 	}
 
-	suspend fun deletePlace(powerMug: PowerMug) : Boolean {
+	suspend fun deletePlace(powerMug: PowerMug): Boolean {
 		Timber.v("Run delete place")
 		withContext(Dispatchers.IO) {
 			database.powerMugDatabaseDao.delete(powerMug.asDbModel())
@@ -52,7 +52,7 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 		return true
 	}
 
-	fun search(query: String) : LiveData<List<PowerMug>> {
+	fun search(query: String): LiveData<List<PowerMug>> {
 		@Suppress("NAME_SHADOWING")
 		val query = "%$query%"
 		Timber.v("Run search place: $query")

@@ -15,7 +15,7 @@ fun calculateDistance(pointA: LatLng, pointB: LatLng): Double {
 	val latA = degreesToRadians(pointA.latitude)
 	val latB = degreesToRadians(pointB.latitude)
 
-	val a =	sin(deltaLat / 2) * sin(deltaLat / 2)
+	val a = sin(deltaLat / 2) * sin(deltaLat / 2)
 		+ sin(deltaLon / 2) * sin(deltaLon / 2) * cos(latA) * cos(latB)
 	val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
@@ -29,5 +29,5 @@ fun degreesToRadians(degrees: Double): Double {
 enum class ThreeState {
 	TRUE,
 	FALSE,
-	TRALSE
+	UNSET
 }

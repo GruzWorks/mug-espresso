@@ -57,19 +57,25 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 		binding.lifecycleOwner = viewLifecycleOwner
 
-		viewModel.deletedPlace.observe(viewLifecycleOwner, Observer { when(it) {
-			ThreeState.TRUE -> {
-				viewModel.deletionHandled()
-				this.findNavController()
-					.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+		viewModel.deletedPlace.observe(viewLifecycleOwner, Observer {
+			when (it) {
+				ThreeState.TRUE -> {
+					viewModel.deletionHandled()
+					this.findNavController()
+						.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+				}
+				ThreeState.FALSE -> {
+					viewModel.deletionHandled()
+					Snackbar.make(
+						getActivity()!!.findViewById(android.R.id.content), getString(
+							R.string.delete_error
+						), Snackbar.LENGTH_LONG
+					).show()
+				}
+				else -> {
+				}
 			}
-			ThreeState.FALSE -> {
-				viewModel.deletionHandled()
-				Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
-					R.string.delete_error), Snackbar.LENGTH_LONG).show()
-			}
-			else -> {}
-		}})
+		})
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
@@ -92,14 +98,6 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		return binding.root
 	}
 
-	/**
-	 * Manipulates the map once available.
-	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera.
-	 * If Google Play services is not installed on the device, the user will be prompted to install
-	 * it inside the SupportMapFragment. This method will only be triggered once the user has
-	 * installed Google Play services and returned to the app.
-	 */
 	override fun onMapReady(googleMap: GoogleMap) {
 		mMap = googleMap
 
