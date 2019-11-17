@@ -39,7 +39,7 @@
 	<fragment
 		android:id="@+id/detailViewFragment"
 		android:name="test.mug.espresso.detailView.DetailViewFragment"
-		android:label="@string/detailsLabel">
+		android:label="@string/details_title">
 		<argument
 			android:name="selectedPlace"
 			app:argType="long" />
@@ -50,7 +50,7 @@
 	<fragment
 		android:id="@+id/addViewFragment"
 		android:name="test.mug.espresso.addEditView.AddViewFragment"
-		android:label="@string/addEditLabel" >
+		android:label="@string/add_edit_title" >
 		<argument
 			android:name="selectedPlace"
 			app:argType="long" />
