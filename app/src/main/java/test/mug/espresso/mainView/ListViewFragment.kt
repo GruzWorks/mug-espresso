@@ -38,6 +38,7 @@ class ListViewFragment : Fragment() {
 
 		binding.viewModel = viewModel
 
+		viewModel.powerMugs.observe(viewLifecycleOwner, Observer{})
 		viewModel.powerMugsWithDistance.observe(
 			viewLifecycleOwner,
 			Observer<List<PowerMugWithDistance>> { mugs ->

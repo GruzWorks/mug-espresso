@@ -86,6 +86,12 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
 		powerMugsWithDistance.value?.sortedBy { it.distance }
 	}
 
+	fun search(query: String) {
+		viewModelScope.launch {
+			repository.search(query)
+		}
+	}
+
 	class Factory(val app: Application) : ViewModelProvider.Factory {
 		override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 			if (modelClass.isAssignableFrom(DataViewModel::class.java)) {

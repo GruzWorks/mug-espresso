@@ -187,12 +187,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private val queryTextListener =
 		object : SearchView.OnQueryTextListener {
-			override fun onQueryTextSubmit(query: String?): Boolean {
+			override fun onQueryTextSubmit(query: String): Boolean {
+				Timber.i("onQueryTextSubmit: $query")
+
+				viewModel.search(query)
+
 				return false
 			}
 
 			override fun onQueryTextChange(newText: String): Boolean {
-				Timber.i("onQueryTextChange: %s", newText)
 				return true
 			}
 		}

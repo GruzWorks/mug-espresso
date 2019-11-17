@@ -22,4 +22,7 @@ interface PowerMugDatabaseDao {
 
 	@Query("SELECT * FROM PowerMugs ORDER BY id ASC")
 	fun getAll(): LiveData<List<DbPowerMug>>
+
+	@Query("SELECT * FROM PowerMugs WHERE name LIKE :query OR address LIKE :query")
+	fun searchFor(query: String): LiveData<List<DbPowerMug>>
 }
