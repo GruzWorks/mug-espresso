@@ -16,8 +16,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
+import test.mug.espresso.ThreeState
 import test.mug.espresso.databinding.FragmentDetailViewBinding
+import test.mug.espresso.repository.PowerMugRepository
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
@@ -26,19 +29,23 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var mMap: GoogleMap
 
+	private lateinit var binding: FragmentDetailViewBinding
+
 	private lateinit var viewModel: DetailViewModel
 
 	private lateinit var currentMarker: Marker
+
+	private lateinit var repository: PowerMugRepository
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentDetailViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_detail_view, container, false
 		)
 
-		val repository = getRepository(requireNotNull(activity).application)
+		repository = getRepository(requireNotNull(activity).application)
 
 		val powerMug =
 			repository.returnPlace(DetailViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
@@ -49,6 +56,28 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		binding.viewModel = viewModel
 
 		binding.lifecycleOwner = viewLifecycleOwner
+
+		viewModel.deletedPlace.observe(viewLifecycleOwner, Observer {
+			binding.progressBar.visibility = View.GONE
+
+			when (it) {
+				ThreeState.TRUE -> {
+					viewModel.deletionHandled()
+					this.findNavController()
+						.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
+				}
+				ThreeState.FALSE -> {
+					viewModel.deletionHandled()
+					Snackbar.make(
+						getActivity()!!.findViewById(android.R.id.content), getString(
+							R.string.delete_error
+						), Snackbar.LENGTH_LONG
+					).show()
+				}
+				else -> {
+				}
+			}
+		})
 
 		viewModel.navigateToAddView.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
@@ -71,14 +100,6 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 		return binding.root
 	}
 
-	/**
-	 * Manipulates the map once available.
-	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera.
-	 * If Google Play services is not installed on the device, the user will be prompted to install
-	 * it inside the SupportMapFragment. This method will only be triggered once the user has
-	 * installed Google Play services and returned to the app.
-	 */
 	override fun onMapReady(googleMap: GoogleMap) {
 		mMap = googleMap
 
@@ -138,9 +159,8 @@ class DetailViewFragment : Fragment(), OnMapReadyCallback {
 
 	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
 		R.id.delete_menu_button -> {
+			binding.progressBar.visibility = View.VISIBLE
 			viewModel.deletePlaceFromDb()
-			this.findNavController()
-				.navigate(DetailViewFragmentDirections.actionDetailViewFragmentToMapViewFragment())
 			true
 		}
 		else -> super.onOptionsItemSelected(item)

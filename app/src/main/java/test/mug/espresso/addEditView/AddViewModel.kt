@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import test.mug.espresso.ThreeState
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.repository.PowerMugRepository
 
@@ -26,6 +27,10 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 	val saveData: LiveData<Boolean>
 		get() = _saveData
 
+	private var _addedPlace = MutableLiveData<ThreeState>(ThreeState.UNSET)
+	val addedPlace: LiveData<ThreeState>
+		get() = _addedPlace
+
 	lateinit var currentMarker: Marker
 
 	init {
@@ -34,14 +39,26 @@ class AddViewModel(private val repository: PowerMugRepository, powerMug: PowerMu
 
 	fun updateDb() {
 		viewModelScope.launch {
-			repository.updatePlace(selectedPlace.value!!)
+			if (repository.updatePlace(selectedPlace.value!!)) {
+				_addedPlace.value = ThreeState.TRUE
+			} else {
+				_addedPlace.value = ThreeState.FALSE
+			}
 		}
 	}
 
 	fun insertToDb() {
 		viewModelScope.launch {
-			repository.insertPlace(selectedPlace.value!!)
+			if (repository.insertPlace(selectedPlace.value!!)) {
+				_addedPlace.value = ThreeState.TRUE
+			} else {
+				_addedPlace.value = ThreeState.FALSE
+			}
 		}
+	}
+
+	fun addingHandled() {
+		_addedPlace.value = ThreeState.UNSET
 	}
 
 	fun saveData() {

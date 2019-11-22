@@ -22,9 +22,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import test.mug.espresso.R
+import test.mug.espresso.ThreeState
 import test.mug.espresso.databinding.FragmentAddViewBinding
 import test.mug.espresso.domain.PowerMug
+import test.mug.espresso.repository.PowerMugRepository
 import test.mug.espresso.repository.getRepository
 import timber.log.Timber
 
@@ -37,15 +40,19 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+	private lateinit var binding: FragmentAddViewBinding
+
+	private lateinit var repository: PowerMugRepository
+
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentAddViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_add_view, container, false
 		)
 
-		val repository = getRepository(requireNotNull(activity).application)
+		repository = getRepository(requireNotNull(activity).application)
 
 		val powerMug =
 			repository.returnPlace(AddViewFragmentArgs.fromBundle(arguments!!).selectedPlace)
@@ -57,6 +64,28 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 
 		binding.lifecycleOwner = viewLifecycleOwner
 
+		viewModel.addedPlace.observe(viewLifecycleOwner, Observer {
+			binding.progressBar.visibility = View.GONE
+
+			when (it) {
+				ThreeState.TRUE -> {
+					viewModel.addingHandled()
+					this.findNavController()
+						.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
+				}
+				ThreeState.FALSE -> {
+					viewModel.addingHandled()
+					Snackbar.make(
+						getActivity()!!.findViewById(android.R.id.content), getString(
+							R.string.insert_update_error
+						), Snackbar.LENGTH_LONG
+					).show()
+				}
+				else -> {
+				}
+			}
+		})
+
 		viewModel.saveData.observe(viewLifecycleOwner, Observer {
 			if (it == true) {
 				viewModel.selectedPlace.value!!.name = binding.pointNameInput.text.toString()
@@ -64,15 +93,16 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 				viewModel.selectedPlace.value!!.numberOfMugs =
 					Integer.parseInt(binding.pointNoOfMugsInput.text.toString())
 				viewModel.selectedPlace.value!!.point = viewModel.currentMarker.position
+
 				binding.progressBar.visibility = View.VISIBLE
+
 				if (viewModel.selectedPlace.value!!.id == -1L) {
 					viewModel.insertToDb()
 				} else {
 					viewModel.updateDb()
 				}
+
 				viewModel.savedData()
-				this.findNavController()
-					.navigate(AddViewFragmentDirections.actionAddViewFragmentToMapViewFragment())
 			}
 		})
 
@@ -88,14 +118,6 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 		return binding.root
 	}
 
-	/**
-	 * Manipulates the map once available.
-	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera.
-	 * If Google Play services is not installed on the device, the user will be prompted to install
-	 * it inside the SupportMapFragment. This method will only be triggered once the user has
-	 * installed Google Play services and returned to the app.
-	 */
 	override fun onMapReady(googleMap: GoogleMap) {
 		mMap = googleMap
 
@@ -110,6 +132,7 @@ class AddViewFragment : Fragment(), OnMapReadyCallback {
 					} else {
 						viewModel.lastLocation.value = LatLng(51.1079, 17.0385) // Wroclaw
 					}
+
 					viewModel.selectedPlace.value =
 						PowerMug(-1, "", viewModel.lastLocation.value!!, "", 0)
 

@@ -1,7 +1,9 @@
 package test.mug.espresso.mainView
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -18,13 +20,15 @@ import test.mug.espresso.domain.PowerMugWithDistance
 class ListViewFragment : Fragment() {
 	private lateinit var viewModel: DataViewModel
 
+	private lateinit var binding: FragmentListViewBinding
+
 	private var viewModelAdapter: ListViewAdapter? = null
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentListViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_list_view, container, false
 		)
 
@@ -38,7 +42,7 @@ class ListViewFragment : Fragment() {
 
 		binding.viewModel = viewModel
 
-		viewModel.powerMugs.observe(viewLifecycleOwner, Observer{})
+		viewModel.powerMugs.observe(viewLifecycleOwner, Observer {})
 		viewModel.powerMugsWithDistance.observe(
 			viewLifecycleOwner,
 			Observer<List<PowerMugWithDistance>> { mugs ->

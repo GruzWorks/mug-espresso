@@ -11,4 +11,6 @@
 	<string name="delete_menu_button">Delete place</string>
 	<string name="search_menu_button">Search</string>
 	<string name="no_results_error">No results</string>
+	<string name="insert_update_error">Can\'t insert/update place. Try again later.</string>
+	<string name="delete_error">Can\'t delete place. Try again later.</string>
 </resources>

@@ -1,7 +1,6 @@
 package test.mug.espresso.mainView
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -15,7 +14,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -38,13 +36,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 	private lateinit var viewModel: DataViewModel
 
+	private lateinit var binding: FragmentMapViewBinding
+
 	private var markers = mutableListOf<Marker>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		val binding: FragmentMapViewBinding = DataBindingUtil.inflate(
+		binding = DataBindingUtil.inflate(
 			inflater, R.layout.fragment_map_view, container, false
 		)
 
@@ -85,14 +85,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 		return binding.root
 	}
 
-	/**
-	 * Manipulates the map once available.
-	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera.
-	 * If Google Play services is not installed on the device, the user will be prompted to install
-	 * it inside the SupportMapFragment. This method will only be triggered once the user has
-	 * installed Google Play services and returned to the app.
-	 */
 	override fun onMapReady(googleMap: GoogleMap) {
 		mMap = googleMap
 
@@ -189,29 +181,40 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
 				viewModel.search(query)
 
-				viewModel.searchResults!!.observe(viewLifecycleOwner, Observer<List<PowerMug>> { mugs ->
-					markers.forEach { item ->
-						item.remove()
-					}
-					markers.clear()
-					val it = mugs.listIterator()
-					for (item in it) {
-						markers.add(mMap.addMarker(MarkerOptions().position(item.point).title(item.id.toString())))
-					}
-					mMap.setOnMarkerClickListener(markerClickListener)
+				viewModel.searchResults!!.observe(
+					viewLifecycleOwner,
+					Observer<List<PowerMug>> { mugs ->
+						markers.forEach { item ->
+							item.remove()
+						}
+						markers.clear()
+						val it = mugs.listIterator()
+						for (item in it) {
+							markers.add(
+								mMap.addMarker(
+									MarkerOptions().position(item.point).title(
+										item.id.toString()
+									)
+								)
+							)
+						}
+						mMap.setOnMarkerClickListener(markerClickListener)
 
-					if (markers.size > 0) {
-						mMap.animateCamera(
-							CameraUpdateFactory.newLatLngZoom(
-								markers[0].position,
-								15f
-							), 1000, null
-						)
-					} else {
-						Snackbar.make(getActivity()!!.findViewById(android.R.id.content), getString(
-													R.string.no_results_error), Snackbar.LENGTH_LONG).show()
-					}
-				})
+						if (markers.size > 0) {
+							mMap.animateCamera(
+								CameraUpdateFactory.newLatLngZoom(
+									markers[0].position,
+									15f
+								), 1000, null
+							)
+						} else {
+							Snackbar.make(
+								getActivity()!!.findViewById(android.R.id.content), getString(
+									R.string.no_results_error
+								), Snackbar.LENGTH_LONG
+							).show()
+						}
+					})
 
 				return false
 			}
@@ -221,7 +224,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 			}
 		}
 
-	private val closeListener =	SearchView.OnCloseListener {
+	private val closeListener = SearchView.OnCloseListener {
 		if (viewModel.searchResults?.hasObservers() == true) {
 			viewModel.searchResults!!.removeObservers(viewLifecycleOwner)
 		}
