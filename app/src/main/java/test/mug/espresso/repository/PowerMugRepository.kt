@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import test.mug.espresso.database.*
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.network.Network
+import test.mug.espresso.network.asDatabaseModel
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,7 +28,8 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 //			}
 			try {
 				val mugs = Network.server.getMugs().await()
-				Timber.i(mugs.toString())
+				database.powerMugDatabaseDao.clear()
+				database.powerMugDatabaseDao.insertAll(*mugs.asDatabaseModel())
 			} catch (e: Throwable) {
 				Timber.w("No connection to server!")
 			}
