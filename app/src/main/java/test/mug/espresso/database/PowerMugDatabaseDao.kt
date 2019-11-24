@@ -5,10 +5,13 @@ import androidx.room.*
 
 @Dao
 interface PowerMugDatabaseDao {
-	@Insert
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertAll(vararg videos: DbPowerMug)
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insert(place: DbPowerMug)
 
-	@Update
+	@Update(onConflict = OnConflictStrategy.REPLACE)
 	fun update(place: DbPowerMug)
 
 	@Delete
