@@ -9,11 +9,14 @@ import test.mug.espresso.database.*
 import test.mug.espresso.domain.PowerMug
 import test.mug.espresso.network.Network
 import test.mug.espresso.network.asDatabaseModel
+import test.mug.espresso.network.asEphemeralNetworkModel
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
 class PowerMugRepository(private val database: PowerMugDatabase) {
+	private var status = true
+
 	val powerMugs: LiveData<List<PowerMug>> =
 		Transformations.map(database.powerMugDatabaseDao.getAll()) {
 			it.asDomainModel()
@@ -46,11 +49,18 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 
 	suspend fun insertPlace(powerMug: PowerMug): Boolean {
 		Timber.v("Run insert place")
-		powerMug.id = 0
 		withContext(Dispatchers.IO) {
-			database.powerMugDatabaseDao.insert(powerMug.asDbModel())
+			//database.powerMugDatabaseDao.insert(powerMug.asDbModel())
+			try {
+				val insertedMug = Network.server.insertMug(powerMug.asEphemeralNetworkModel()).await()
+				database.powerMugDatabaseDao.insert(insertedMug.asDatabaseModel())
+				status = true
+			} catch (e: Throwable) {
+				Timber.w("No connection to server!")
+				status = false
+			}
 		}
-		return true
+		return status
 	}
 
 	suspend fun deletePlace(powerMug: PowerMug): Boolean {

@@ -2,6 +2,7 @@ package test.mug.espresso.network
 
 import com.squareup.moshi.JsonClass
 import test.mug.espresso.database.DbPowerMug
+import test.mug.espresso.domain.PowerMug
 
 @JsonClass(generateAdapter = true)
 data class NetworkPowerMug(
@@ -15,15 +16,19 @@ data class NetworkPowerMug(
 
 fun List<NetworkPowerMug>.asDatabaseModel(): Array<DbPowerMug> {
 	return map {
-		DbPowerMug(
-			id = it.id,
-			name = it.name,
-			lat = it.lat,
-			lng = it.lon,
-			address = it.address,
-			numberOfMugs = it.num_mugs
-		)
+		it.asDatabaseModel()
 	}.toTypedArray()
+}
+
+fun NetworkPowerMug.asDatabaseModel(): DbPowerMug {
+	return DbPowerMug(
+		id,
+		name,
+		lat,
+		lon,
+		address,
+		num_mugs
+	)
 }
 
 @JsonClass(generateAdapter = true)
@@ -34,3 +39,13 @@ data class EphemeralNetworkPowerMug(
 	var address: String,
 	var num_mugs: Int
 )
+
+fun PowerMug.asEphemeralNetworkModel(): EphemeralNetworkPowerMug {
+	return EphemeralNetworkPowerMug(
+		name,
+		point.latitude,
+		point.longitude,
+		address,
+		numberOfMugs
+	)
+}
