@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import test.mug.espresso.database.*
 import test.mug.espresso.domain.PowerMug
+import test.mug.espresso.network.Network
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +25,12 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 //				createRandomEntryNearWroclaw()
 //				createRandomEntryNearWarsaw()
 //			}
+			try {
+				val mugs = Network.server.getMugs().await()
+				Timber.i(mugs.toString())
+			} catch (e: Throwable) {
+				Timber.w("No connection to server!")
+			}
 		}
 	}
 
