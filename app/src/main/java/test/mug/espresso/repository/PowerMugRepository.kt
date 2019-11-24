@@ -95,7 +95,7 @@ class PowerMugRepository(private val database: PowerMugDatabase) {
 	fun returnPlace(key: Long): PowerMug? {
 		for (item in powerMugs.value!!) {
 			if (item.id == key) {
-				return item
+				return item.copy()
 			}
 		}
 		return null
