@@ -31,6 +31,17 @@ fun NetworkPowerMug.asDatabaseModel(): DbPowerMug {
 	)
 }
 
+fun PowerMug.asNetworkModel(): NetworkPowerMug {
+	return NetworkPowerMug(
+		id,
+		name,
+		point.latitude,
+		point.longitude,
+		address,
+		numberOfMugs
+	)
+}
+
 @JsonClass(generateAdapter = true)
 data class EphemeralNetworkPowerMug(
 	var name: String,
