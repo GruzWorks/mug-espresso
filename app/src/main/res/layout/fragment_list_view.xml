@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context=".mainView.ListViewFragment">
+
+	<data>
+
+		<variable
+			name="viewModel"
+			type="test.mug.espresso.mainView.DataViewModel" />
+	</data>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:fillViewport="true">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/ConstraintLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<ProgressBar
+				android:id="@+id/loading_spinner"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				app:goneIfNotNull="@{viewModel.powerMugs}"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/recycler_view"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				app:layout_constraintBottom_toTopOf="@+id/buttonListView"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:listitem="@layout/listview_item" />
+
+			<Button
+				android:id="@+id/buttonMapView"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:onClick="@{() -> viewModel.goToSecondView()}"
+				android:text="@string/map_view"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toStartOf="@+id/buttonListView"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
+
+			<Button
+				android:id="@+id/buttonListView"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="@string/list_view"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/buttonMapView"
+				app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
+
+			<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/fabAddView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="16dp"
+				android:layout_marginBottom="16dp"
+				android:clickable="true"
+				android:focusable="true"
+				android:onClick="@{() -> viewModel.goToAddView()}"
+				android:src="@android:drawable/ic_input_add"
+				android:tint="#202020"
+				app:backgroundTint="#F0F0F0"
+				app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="1.0"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintVertical_bias="1.0" />
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+</layout>

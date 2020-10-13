@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Project Thunderbolt</string>
+	<string name="list_view">Lista</string>
+	<string name="map_view">Mapa</string>
+	<string name="details_title">Szczegóły</string>
+	<string name="add_edit_title">Dodaj/Edytuj punkt</string>
+	<string name="place_name_label">Nazwa obiektu:</string>
+	<string name="place_address_label">Adres obiektu:</string>
+	<string name="no_of_mugs_label">Ilość dostępnych gniazdek:</string>
+	<string name="no_of_mugs_format">Ilość dostępnych gniazdek: %d</string>
+	<string name="delete_menu_button">Usuń obiekt</string>
+	<string name="search_menu_button">Szukaj</string>
+	<string name="no_results_error">Brak wyników</string>
+	<string name="insert_update_error">Nie można dodać/zmienić obiektu. Spróbuj później.</string>
+	<string name="delete_error">Nie można usunąć obiektu. Spróbuj później.</string>
+</resources>
