@@ -1,6 +1,8 @@
 # mug-espresso
 Ah shit, here we go again.
 
+**This project is discontinued.**
+
 ## Building from source
 
 ### Requirements
